@@ -1,16 +1,36 @@
-import { Flex, Heading, Text } from "@chakra-ui/react";
+import { Button, Flex, Input } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { FormEvent, useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const [searchText, setSearchText] = useState("");
+
+  async function handleSearch(event: FormEvent) {
+    event.preventDefault();
+    if (searchText.length === 0) return;
+
+    console.log("novo click -> ", searchText);
+    router.push(`/search/${searchText}`);
+  }
+
   return (
     <Flex
-      backgroundColor="gray.800"
+      backgroundColor="gray.300"
       h="100vh"
       alignItems="center"
       justifyContent="center"
     >
-      <Flex w="100%" alignItems="center" flexDir="column">
-        <Heading color="gray.200">This is Bauga Indica 2</Heading>
-        <Text color="gray.300">Yeah! Version 2!</Text>
+      <Flex w="100%" alignItems="center" flexDir="row" p="4">
+        <Input
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          placeholder="qual serviço está procurando"
+          backgroundColor="gray.100"
+          borderColor="gray.900"
+          mr="2"
+        />
+        <Button onClick={handleSearch}>Procurar</Button>
       </Flex>
     </Flex>
   );

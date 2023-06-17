@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,77 +10,94 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model accounts {
-  id                  String  @id
-  userId              String
-  type                String
-  provider            String
-  provider_account_id String
-  refresh_token       String?
-  access_token        String?
-  expires_at          Int?
-  token_type          String?
-  scope               String?
-  id_token            String?
-  session_state       String?
-  users               users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  @@unique([provider, provider_account_id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
-model service_types {
-  id          Int        @id @default(autoincrement())
-  name        String
-  description String
-  services    services[]
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
 }
 
-model services {
-  id            String        @id
-  title         String
-  description   String
-  value         Int
-  service_class String
-  valid_to_     DateTime      @map("valid_to ")
-  valid_from    DateTime
-  created_at    DateTime      @default(now())
-  updated_at    DateTime
-  providerId    String
-  serviceTypeId Int
-  users         users         @relation(fields: [providerId], references: [id])
-  service_types service_types @relation(fields: [serviceTypeId], references: [id])
-}
-
-model sessions {
-  id            String   @id
-  session_token String   @unique
-  userId        String
-  expires       DateTime
-  users         users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model users {
-  id             String     @id
-  name           String?
-  email          String?    @unique
-  phone          String?    @unique
-  user_type      String     @default("user")
-  created_at     DateTime   @default(now())
-  updated_at     DateTime
-  password       String?    @default("123456")
-  emailConfirmed Boolean    @default(false)
-  phoneConfirmed Boolean    @default(false)
-  emailVerified  DateTime?
-  image          String?
-  accounts       accounts[]
-  services       services[]
-  sessions       sessions[]
-}
-
-model verification_tokens {
+model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
 
   @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model User {
+  id       String  @id @default(cuid())
+  name     String?
+  email    String? @unique
+  phone    String? @unique
+  userType String  @default("user") @map(name: "user_type")
+  password String? @default("123456")
+
+  phoneConfirmed Boolean   @default(false)
+  emailConfirmed Boolean   @default(false)
+  emailVerified  DateTime?
+  image          String?
+
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+  accounts  Account[]
+  sessions  Session[]
+  services  Service[]
+
+  @@map(name: "users")
+}
+
+model Service {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  value       Int
+
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
+  serviceTypeId Int
+
+  serviceClass String   @map(name: "service_class")
+  validTo      DateTime @map(name: "valid_to ")
+  validFrom    DateTime @map(name: "valid_from")
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  provider   User   @relation(fields: [providerId], references: [id])
+  providerId String
+
+  @@map(name: "services")
+}
+
+model ServiceType {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  services    Service[]
+
+  @@map(name: "service_types")
 }
