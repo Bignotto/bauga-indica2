@@ -1,10 +1,9 @@
-import { Button, Flex, Input, Text } from "@chakra-ui/react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import Header from "@/components/Header";
+import { Button, Flex, Input } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 
 export default function Home() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
 
@@ -16,25 +15,15 @@ export default function Home() {
     router.push(`/search/${searchText}`);
   }
 
-  async function handleLogin(event: FormEvent) {
-    event.preventDefault();
-
-    try {
-      await signIn();
-    } catch (error) {
-      console.log({ error });
-    }
-  }
-
   return (
     <Flex
+      height="100vh"
       backgroundColor="gray.300"
-      h="100vh"
       alignItems="center"
-      justifyContent="center"
       flexDir="column"
     >
-      <Flex w="100%" alignItems="center" flexDir="row" p="4">
+      <Header />
+      <Flex w="100%" alignItems="center" flexDir="row" p="4" mt="16">
         <Input
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -44,19 +33,6 @@ export default function Home() {
           mr="2"
         />
         <Button onClick={handleSearch}>Procurar</Button>
-      </Flex>
-      <Flex flexDir="column">
-        {status === "authenticated" ? (
-          <>
-            <Text>LOGADO</Text>
-            <Button onClick={() => signOut()}>Logout</Button>
-          </>
-        ) : (
-          <>
-            <Text>Não logado</Text>
-            <Button onClick={handleLogin}>Login</Button>
-          </>
-        )}
       </Flex>
     </Flex>
   );

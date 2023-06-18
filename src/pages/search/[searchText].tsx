@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import { api } from "@/services/api";
 import { Flex, Text } from "@chakra-ui/react";
 import { Service, ServiceType, User } from "@prisma/client";
@@ -28,7 +29,13 @@ export default function SearchResults() {
   }, [searchText]);
 
   return (
-    <Flex backgroundColor="gray.300" h="100vh">
+    <Flex
+      height="100vh"
+      backgroundColor="gray.300"
+      alignItems="center"
+      flexDir="column"
+    >
+      <Header />
       <Flex flexDir="column">
         {isLoading && <Text>Carregando</Text>}
 
