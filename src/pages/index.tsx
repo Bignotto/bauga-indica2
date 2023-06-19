@@ -21,6 +21,7 @@ export default function Home() {
       backgroundColor="gray.300"
       alignItems="center"
       flexDir="column"
+      maxW={500}
     >
       <Header />
       <Flex w="100%" alignItems="center" flexDir="row" p="4" mt="16">
