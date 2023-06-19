@@ -29,14 +29,9 @@ export default function SearchResults() {
   }, [searchText]);
 
   return (
-    <Flex
-      height="100vh"
-      backgroundColor="gray.300"
-      alignItems="center"
-      flexDir="column"
-    >
+    <Flex height="100vh" alignItems="center" flexDir="column" minW={500}>
       <Header />
-      <Flex flexDir="column">
+      <Flex flexDir="column" w="100%">
         {isLoading && <Text>Carregando</Text>}
 
         {servicesList &&
