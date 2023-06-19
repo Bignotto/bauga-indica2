@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model User {
+  id       String  @id @default(cuid())
+  name     String?
+  email    String? @unique
+  phone    String? @unique
+  userType String  @default("user") @map(name: "user_type")
+  password String? @default("123456")
+
+  phoneConfirmed Boolean   @default(false)
+  emailConfirmed Boolean   @default(false)
+  emailVerified  DateTime?
+  image          String?
+
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+  accounts  Account[]
+  sessions  Session[]
+  services  Service[]
+
+  @@map(name: "users")
+}
+
+model Service {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  value       Int
+
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
+  serviceTypeId Int
+
+  serviceClass String   @map(name: "service_class")
+  validTo      DateTime @map(name: "valid_to ")
+  validFrom    DateTime @map(name: "valid_from")
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  provider   User   @relation(fields: [providerId], references: [id])
+  providerId String
+
+  @@map(name: "services")
+}
+
+model ServiceType {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  services    Service[]
+
+  @@map(name: "service_types")
+}
