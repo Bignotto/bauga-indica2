@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Avatar, Button, Flex, Text } from "@chakra-ui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { FormEvent } from "react";
 
@@ -24,22 +24,44 @@ export default function Header() {
 
   if (status === "authenticated")
     return (
-      <Flex w="100%" h="16" backgroundColor="blue.300" alignItems="center">
-        <Image
-          src={session.user?.image!}
-          alt="User Avatar"
-          boxSize="14"
-          objectFit="cover"
-          rounded="full"
-        />
-        <Text>{session.user?.name}</Text>
-        <Button onClick={() => signOut()}>Logout</Button>
+      <Flex
+        w="100%"
+        h="16"
+        alignItems="center"
+        p="4"
+        justifyContent="space-between"
+      >
+        <Flex>
+          <Avatar
+            name={session.user?.name!}
+            src={session.user?.image!}
+            bg="teal.500"
+          />
+          <Flex flexDir={"column"} ml="2" justifyContent="center">
+            <Text fontWeight="bold" fontSize="xs">
+              {session.user?.name}
+            </Text>
+            <Text fontSize="xs">{session.user?.email}</Text>
+          </Flex>
+        </Flex>
+        <Button onClick={() => signOut()} colorScheme="blue">
+          Logout
+        </Button>
       </Flex>
     );
   return (
-    <Flex w="100%" h="16" backgroundColor="red.300">
-      <Text>Não logado</Text>
-      <Button onClick={handleLogin}>Login</Button>
+    <Flex
+      w="100%"
+      h="16"
+      alignItems="center"
+      p="4"
+      justifyContent="space-between"
+    >
+      <Avatar name={""} src={""} />
+      <Text>Crie uma conta</Text>
+      <Button onClick={handleLogin} colorScheme="blue">
+        Login
+      </Button>
     </Flex>
   );
 }

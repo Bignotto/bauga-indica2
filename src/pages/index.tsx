@@ -32,7 +32,9 @@ export default function Home() {
           borderColor="gray.900"
           mr="2"
         />
-        <Button onClick={handleSearch}>Procurar</Button>
+        <Button onClick={handleSearch} colorScheme="blue">
+          Procurar
+        </Button>
       </Flex>
     </Flex>
   );
