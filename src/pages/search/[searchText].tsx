@@ -1,3 +1,4 @@
+import AppLogo from "@/components/AppLogo";
 import Header from "@/components/Header";
 import { api } from "@/services/api";
 import { Flex, Text } from "@chakra-ui/react";
@@ -29,14 +30,10 @@ export default function SearchResults() {
   }, [searchText]);
 
   return (
-    <Flex
-      height="100vh"
-      backgroundColor="gray.300"
-      alignItems="center"
-      flexDir="column"
-    >
+    <Flex height="100vh" flexDir="column" minW={["100%", 500]}>
       <Header />
-      <Flex flexDir="column">
+      <AppLogo size="sm" />
+      <Flex flexDir="column" w="100%">
         {isLoading && <Text>Carregando</Text>}
 
         {servicesList &&

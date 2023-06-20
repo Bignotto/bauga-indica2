@@ -1,3 +1,4 @@
+import AppLogo from "@/components/AppLogo";
 import Header from "@/components/Header";
 import { Button, Flex, Input } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -18,12 +19,16 @@ export default function Home() {
   return (
     <Flex
       height="100vh"
-      backgroundColor="gray.300"
       alignItems="center"
       flexDir="column"
+      minW={["100%", 500]}
     >
       <Header />
-      <Flex w="100%" alignItems="center" flexDir="row" p="4" mt="16">
+      <Flex mt="8">
+        <AppLogo size="lg" />
+      </Flex>
+
+      <Flex alignItems="center" flexDir="row" p="4" mt="4" w="100%">
         <Input
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -32,7 +37,9 @@ export default function Home() {
           borderColor="gray.900"
           mr="2"
         />
-        <Button onClick={handleSearch}>Procurar</Button>
+        <Button colorScheme="blue" type="submit" onClick={handleSearch}>
+          Procurar
+        </Button>
       </Flex>
     </Flex>
   );
