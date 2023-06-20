@@ -17,20 +17,18 @@ export default function Home() {
   }
 
   return (
-    <Flex height="100vh" alignItems="center" flexDir="column" minW={500}>
+    <Flex
+      height="100vh"
+      alignItems="center"
+      flexDir="column"
+      minW={["100%", 500]}
+    >
       <Header />
       <Flex mt="8">
-        <AppLogo />
+        <AppLogo size="lg" />
       </Flex>
 
-      <Flex
-        alignItems="center"
-        flexDir="row"
-        p="4"
-        mt="4"
-        bgColor="blue.300"
-        w="100%"
-      >
+      <Flex alignItems="center" flexDir="row" p="4" mt="4" w="100%">
         <Input
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -39,7 +37,7 @@ export default function Home() {
           borderColor="gray.900"
           mr="2"
         />
-        <Button onClick={handleSearch} colorScheme="blue">
+        <Button colorScheme="blue" type="submit" onClick={handleSearch}>
           Procurar
         </Button>
       </Flex>
