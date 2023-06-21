@@ -14,10 +14,11 @@ export default async function handler(
         {
           title: {
             contains: `${searchText}`,
+            mode: "insensitive",
           },
         },
         {
-          description: { contains: `${searchText}` },
+          description: { contains: `${searchText}`, mode: "insensitive" },
         },
       ],
     },

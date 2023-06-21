@@ -2,7 +2,7 @@ import AppLogo from "@/components/AppLogo";
 import Header from "@/components/Header";
 import ServiceCard from "@/components/ServiceCard";
 import { api } from "@/services/api";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Text } from "@chakra-ui/react";
 import { Service, ServiceType, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ export default function SearchResults() {
         <Text>Encontrados {servicesList?.length} serviços</Text>
       </Flex>
       <Flex flexDir="column" w="100%">
-        {isLoading && <Text>Carregando</Text>}
+        {isLoading && <Spinner colorScheme="blue" />}
 
         {servicesList &&
           servicesList.map((s) => (
