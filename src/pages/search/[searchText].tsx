@@ -31,7 +31,7 @@ export default function SearchResults() {
   }, [searchText]);
 
   return (
-    <Flex px="4" height="100vh" flexDir="column" w={["100%", 500]}>
+    <Flex px="4" h="100%" flexDir="column" w={["100%", 500]}>
       <Header />
       <Flex alignItems="center" justifyContent="space-between" my="4">
         <AppLogo size="md" />
