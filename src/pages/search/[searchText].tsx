@@ -1,5 +1,6 @@
 import AppLogo from "@/components/AppLogo";
 import Header from "@/components/Header";
+import ServiceCard from "@/components/ServiceCard";
 import { api } from "@/services/api";
 import { Flex, Text } from "@chakra-ui/react";
 import { Service, ServiceType, User } from "@prisma/client";
@@ -30,13 +31,14 @@ export default function SearchResults() {
   }, [searchText]);
 
   return (
-    <Flex height="100vh" flexDir="column" minW={["100%", 500]}>
+    <Flex height="100vh" flexDir="column" maxW={["100%", 500]} bg="blue.300">
       <Header />
-      <AppLogo size="sm" />
+      <AppLogo size="md" />
       <Flex flexDir="column" w="100%">
         {isLoading && <Text>Carregando</Text>}
+        <ServiceCard />
 
-        {servicesList &&
+        {/* {servicesList &&
           servicesList.map((s) => (
             <Flex key={s.id} flexDir="column">
               <Text>{s.title}</Text>
@@ -44,7 +46,7 @@ export default function SearchResults() {
               <Text>{s.serviceType.name}</Text>
               <Text>{s.provider.name}</Text>
             </Flex>
-          ))}
+          ))} */}
       </Flex>
     </Flex>
   );

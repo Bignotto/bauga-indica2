@@ -21,7 +21,7 @@ export default function Home() {
       height="100vh"
       alignItems="center"
       flexDir="column"
-      minW={["100%", 500]}
+      maxW={["100%", 500]}
     >
       <Header />
       <Flex mt="8">
