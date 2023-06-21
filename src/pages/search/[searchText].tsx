@@ -31,22 +31,26 @@ export default function SearchResults() {
   }, [searchText]);
 
   return (
-    <Flex height="100vh" flexDir="column" maxW={["100%", 500]} bg="blue.300">
+    <Flex px="4" height="100vh" flexDir="column" w={["100%", 500]}>
       <Header />
-      <AppLogo size="md" />
+      <Flex alignItems="center" justifyContent="space-between" my="4">
+        <AppLogo size="md" />
+        <Text>Encontrados {servicesList?.length} serviços</Text>
+      </Flex>
       <Flex flexDir="column" w="100%">
         {isLoading && <Text>Carregando</Text>}
-        <ServiceCard />
 
-        {/* {servicesList &&
+        {servicesList &&
           servicesList.map((s) => (
-            <Flex key={s.id} flexDir="column">
-              <Text>{s.title}</Text>
-              <Text>{s.description}</Text>
-              <Text>{s.serviceType.name}</Text>
-              <Text>{s.provider.name}</Text>
-            </Flex>
-          ))} */}
+            <ServiceCard
+              name={s.title}
+              description={s.description}
+              serviceRating={5}
+              serviceType={s.serviceType.name}
+              username={s.provider.name ?? "desconhecido"}
+              key={s.id}
+            />
+          ))}
       </Flex>
     </Flex>
   );
