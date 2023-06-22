@@ -48,6 +48,7 @@ export default function SearchResults() {
               serviceRating={5}
               serviceType={s.serviceType.name}
               username={s.provider.name ?? "desconhecido"}
+              value={s.value}
               key={s.id}
             />
           ))}
