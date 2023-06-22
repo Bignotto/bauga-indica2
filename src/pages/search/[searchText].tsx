@@ -43,6 +43,7 @@ export default function SearchResults() {
         {servicesList &&
           servicesList.map((s) => (
             <ServiceCard
+              id={s.id}
               name={s.title}
               description={s.description}
               serviceRating={5}
