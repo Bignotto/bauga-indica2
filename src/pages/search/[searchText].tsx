@@ -1,7 +1,8 @@
 import AppLogo from "@/components/AppLogo";
 import Header from "@/components/Header";
+import ServiceCard from "@/components/ServiceCard";
 import { api } from "@/services/api";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Text } from "@chakra-ui/react";
 import { Service, ServiceType, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -30,20 +31,25 @@ export default function SearchResults() {
   }, [searchText]);
 
   return (
-    <Flex height="100vh" flexDir="column" minW={["100%", 500]}>
+    <Flex px="4" h="100%" flexDir="column" w={["100%", 500]}>
       <Header />
-      <AppLogo size="sm" />
+      <Flex alignItems="center" justifyContent="space-between" my="4">
+        <AppLogo size="md" />
+        <Text>Encontrados {servicesList?.length} serviços</Text>
+      </Flex>
       <Flex flexDir="column" w="100%">
-        {isLoading && <Text>Carregando</Text>}
+        {isLoading && <Spinner colorScheme="blue" />}
 
         {servicesList &&
           servicesList.map((s) => (
-            <Flex key={s.id} flexDir="column">
-              <Text>{s.title}</Text>
-              <Text>{s.description}</Text>
-              <Text>{s.serviceType.name}</Text>
-              <Text>{s.provider.name}</Text>
-            </Flex>
+            <ServiceCard
+              name={s.title}
+              description={s.description}
+              serviceRating={5}
+              serviceType={s.serviceType.name}
+              username={s.provider.name ?? "desconhecido"}
+              key={s.id}
+            />
           ))}
       </Flex>
     </Flex>

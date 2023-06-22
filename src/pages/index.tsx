@@ -21,14 +21,15 @@ export default function Home() {
       height="100vh"
       alignItems="center"
       flexDir="column"
-      minW={["100%", 500]}
+      w={["100%", 500]}
+      px="4"
     >
       <Header />
       <Flex mt="8">
         <AppLogo size="lg" />
       </Flex>
 
-      <Flex alignItems="center" flexDir="row" p="4" mt="4" w="100%">
+      <Flex alignItems="center" flexDir={["column", "row"]} m="4" w="100%">
         <Input
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}

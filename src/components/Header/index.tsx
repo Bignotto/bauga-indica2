@@ -24,13 +24,7 @@ export default function Header() {
 
   if (status === "authenticated")
     return (
-      <Flex
-        w="100%"
-        h="16"
-        alignItems="center"
-        p="4"
-        justifyContent="space-between"
-      >
+      <Flex w="100%" h="16" alignItems="center" justifyContent="space-between">
         <Flex>
           <Avatar
             name={session.user?.name!}
@@ -50,13 +44,7 @@ export default function Header() {
       </Flex>
     );
   return (
-    <Flex
-      w="100%"
-      h="16"
-      alignItems="center"
-      p="4"
-      justifyContent="space-between"
-    >
+    <Flex w="100%" h="16" alignItems="center" justifyContent="space-between">
       <Avatar name={""} src={""} />
       <Text>Crie uma conta</Text>
       <Button onClick={handleLogin} colorScheme="blue">
