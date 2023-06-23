@@ -6,12 +6,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Service | null>
 ) {
+  if (req.method !== "GET") return res.status(405).send(null);
   const { serviceId } = req.query;
-  const serviceIdString = serviceId?.toString();
 
   const serviceFound = await prisma.service.findUnique({
     where: {
-      id: serviceIdString,
+      id: `${serviceId}`,
     },
   });
 

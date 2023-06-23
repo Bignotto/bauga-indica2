@@ -1,7 +1,7 @@
 import AppLogo from "@/components/AppLogo";
 import Header from "@/components/Header";
 import { api } from "@/services/api";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -22,9 +22,11 @@ export default function ServiceDetails() {
   }, []);
 
   return (
-    <Flex px="4" h="100%" flexDir="column" w={["100%", 500]}>
-      <Header />
-      <AppLogo size="md" />
-    </Flex>
+    <Stack alignItems={"center"}>
+      <Flex h="full" px="4" flexDir="column" w={["100%", 500]}>
+        <Header />
+        <AppLogo size="md" />
+      </Flex>
+    </Stack>
   );
 }

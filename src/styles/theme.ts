@@ -5,4 +5,11 @@ export const theme = extendTheme({
     body: "var(--font-suwannaphum)",
     heading: "var(--font-headingFont)",
   },
+  styles: {
+    global: {
+      body: {
+        bg: "#CBD5E0",
+      },
+    },
+  },
 });
