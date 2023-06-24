@@ -1,9 +1,18 @@
 import Header from "@/components/Header";
 import { api } from "@/services/api";
-import { Flex, Image, Spinner, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { Service, ServiceType, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { BsWhatsapp } from "react-icons/bs";
 
 export default function ServiceDetails() {
   const router = useRouter();
@@ -20,7 +29,6 @@ export default function ServiceDetails() {
   useEffect(() => {
     async function loadService() {
       const response = await api.get(`/services/${serviceId}`);
-      console.log(response.data);
       setService(response.data);
       setIsLoading(false);
     }
@@ -44,13 +52,28 @@ export default function ServiceDetails() {
           <Text fontSize={"2xl"} fontWeight={"bold"} color={"black"}>
             {service?.title}
           </Text>
-          <Text>{service?.description}</Text>{" "}
-          <Text fontWeight={"bold"}>{service?.provider.name}</Text>{" "}
+          <Text>{service?.description}</Text>
+          <HStack>
+            <Image
+              src={service?.provider.image!}
+              alt="provider image"
+              boxSize={42}
+              rounded={"full"}
+            />
+            <Text fontWeight={"bold"} fontSize={"large"}>
+              {service?.provider.name}
+            </Text>
+          </HStack>
           <Text fontSize={"large"} fontWeight={"bold"} color={"blue.500"}>
             R$ {service?.value}
           </Text>
+          <Button colorScheme="green" leftIcon={<BsWhatsapp size={20} />}>
+            Contato
+          </Button>
         </Stack>
       )}
     </Stack>
   );
 }
+
+//TODO: implement images list component

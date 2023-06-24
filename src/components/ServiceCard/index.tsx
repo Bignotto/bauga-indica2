@@ -54,8 +54,9 @@ export default function ServiceCard({
         </Text>
         <Button
           onClick={handleSeeDetails}
-          colorScheme="green"
+          colorScheme="blue"
           rightIcon={<BsInfoSquare size={20} />}
+          w="100%"
         >
           Ver mais detalhes
         </Button>
