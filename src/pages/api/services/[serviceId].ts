@@ -13,6 +13,10 @@ export default async function handler(
     where: {
       id: `${serviceId}`,
     },
+    include: {
+      provider: true,
+      serviceType: true,
+    },
   });
 
   if (!serviceFound) return res.status(404).send(null);

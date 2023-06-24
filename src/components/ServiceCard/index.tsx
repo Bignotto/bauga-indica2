@@ -27,7 +27,7 @@ export default function ServiceCard({
   function handleSeeDetails(event: FormEvent) {
     event.preventDefault();
 
-    router.push(`/service/${id}`);
+    router.push(`/services/${id}`);
   }
   return (
     <Flex w="100%" bg="gray.100" flexDir="column" p="2" mt="4">
