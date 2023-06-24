@@ -44,11 +44,7 @@ export default function ServiceCard({
         <Text>{username}</Text>
         <Text>{serviceRating}</Text>
       </Flex>
-      <Flex
-        justifyContent="space-between"
-        alignItems={"baseline"}
-        flexDirection={["column", "row"]}
-      >
+      <Flex flexDir={"column"}>
         <Text fontSize={"lg"} fontWeight={"bold"} color={"blue.500"}>
           R$ {value}
         </Text>

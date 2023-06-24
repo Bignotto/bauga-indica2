@@ -1,6 +1,19 @@
-import { Avatar, Button, Flex, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Flex,
+  HStack,
+  IconButton,
+  Text,
+} from "@chakra-ui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { FormEvent } from "react";
+import {
+  MdMessage,
+  MdOutlineDashboard,
+  MdOutlinePhonelinkErase,
+} from "react-icons/md";
+import { RiLogoutBoxRLine } from "react-icons/ri";
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -38,9 +51,20 @@ export default function Header() {
             <Text fontSize="xs">{session.user?.email}</Text>
           </Flex>
         </Flex>
-        <Button onClick={() => signOut()} colorScheme="blue">
-          Logout
-        </Button>
+        <HStack>
+          <MdOutlineDashboard size={24} />
+          <MdMessage size={24} />
+          <Button variant={"unstyled"}>
+            <MdOutlinePhonelinkErase size={24} />
+          </Button>
+          <IconButton
+            aria-label="sign out button"
+            onClick={() => signOut()}
+            colorScheme="blue"
+            icon={<RiLogoutBoxRLine size={24} />}
+            variant={"unstyled"}
+          />
+        </HStack>
       </Flex>
     );
   return (
@@ -53,3 +77,7 @@ export default function Header() {
     </Flex>
   );
 }
+
+// MdOutlinePhonelinkErase -> phone not confirmed
+// MdOutlineSmartphone => phone confirmed
+// PiSignOutFill -signout
