@@ -22,6 +22,7 @@ export default function Header() {
   const { data: session, status } = useSession();
   const [userProfile, setUserProfile] = useState<User>();
 
+  //TODO: encapsulate this in a hook
   useEffect(() => {
     async function loadUserProfile() {
       const response = await api.get(`users/${session?.user?.email}`);
