@@ -1,8 +1,8 @@
-import { Input, InputProps, Stack, Text } from "@chakra-ui/react";
+import { Flex, Input, InputProps, Stack, Text } from "@chakra-ui/react";
 
 type AppInputProps = InputProps & {
   label: string;
-  error: string | null;
+  error: string | undefined;
 };
 
 export default function AppInput({ error, label, ...rest }: AppInputProps) {
@@ -20,6 +20,11 @@ export default function AppInput({ error, label, ...rest }: AppInputProps) {
         }}
         {...rest}
       />
+      <Flex w="100%" mt="-1.5" h="2">
+        <Text fontSize={"x-small"} fontWeight={"bold"} color={"crimson"}>
+          {error ?? `\n`}
+        </Text>
+      </Flex>
     </Stack>
   );
 }

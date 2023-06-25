@@ -13,6 +13,9 @@ export default async function handler(
     where: {
       email: `${userEmail}`,
     },
+    include: {
+      accounts: true,
+    },
   });
 
   if (!userFound) return res.status(404).send(null);

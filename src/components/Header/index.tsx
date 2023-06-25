@@ -5,10 +5,12 @@ import {
   Button,
   Flex,
   HStack,
+  Link,
   Text,
 } from "@chakra-ui/react";
 import { User } from "@prisma/client";
 import { signIn, signOut, useSession } from "next-auth/react";
+import NextLink from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import {
   MdEdit,
@@ -56,21 +58,23 @@ export default function Header() {
     return (
       <Flex w="100%" h="16" alignItems="center" justifyContent="space-between">
         <Flex>
-          <Avatar
-            name={session.user?.name!}
-            src={session.user?.image!}
-            bg="teal.500"
-          >
-            {userProfile?.phoneConfirmed ? (
-              <AvatarBadge bg={"blue.500"} boxSize={"4"} borderWidth={"thin"}>
-                <MdEdit size={12} />
-              </AvatarBadge>
-            ) : (
-              <AvatarBadge bg={"red.500"} boxSize={"4"} borderWidth={"thin"}>
-                <MdEdit size={12} />
-              </AvatarBadge>
-            )}
-          </Avatar>
+          <Link as={NextLink} href="/users/profile">
+            <Avatar
+              name={session.user?.name!}
+              src={session.user?.image!}
+              bg="teal.500"
+            >
+              {userProfile?.phoneConfirmed ? (
+                <AvatarBadge bg={"blue.500"} boxSize={"4"} borderWidth={"thin"}>
+                  <MdEdit size={12} />
+                </AvatarBadge>
+              ) : (
+                <AvatarBadge bg={"red.500"} boxSize={"4"} borderWidth={"thin"}>
+                  <MdEdit size={12} />
+                </AvatarBadge>
+              )}
+            </Avatar>
+          </Link>
           <Flex flexDir={"column"} ml="2" justifyContent="center">
             <Text fontWeight="bold" fontSize="xs">
               {session.user?.name}

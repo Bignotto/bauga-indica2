@@ -1,9 +1,18 @@
 import AppInput from "@/components/AppInput";
 import AppLogo from "@/components/AppLogo";
+import AppSpacer from "@/components/AppSpacer";
 import { api } from "@/services/api";
-import { Avatar, Flex, Heading, Spinner, Stack, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Heading,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { User } from "@prisma/client";
+import { Account, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -25,18 +34,22 @@ const profileSchema = yup.object({
     .required("Um endereço de e-mail é obrigatório."),
   phone: yup
     .string()
-    .required()
+    .required("Você precisa de um número de telefone para validar sua conta.")
     .test(
       "len",
       "Não parece ser um número de telefone válido.",
-      (val) => val.length === 11
+      (val) => !!val && val.length === 11
     ),
 });
 
 export default function Profile() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [userProfile, setUserProfile] = useState<User>();
+  const [userProfile, setUserProfile] = useState<
+    User & {
+      accounts: Account[];
+    }
+  >();
   const [isLoading, setIsLoading] = useState(true);
 
   const { control, handleSubmit, formState, setValue } = useForm<FormDataProps>(
@@ -51,9 +64,9 @@ export default function Profile() {
       try {
         const response = await api.get(`users/${session?.user?.email}`);
         setUserProfile(response.data);
-        setValue("name", response.data.name);
-        setValue("email", response.data.email);
-        setValue("phone", response.data.phone);
+        setValue("name", response.data.name ?? "");
+        setValue("email", response.data.email ?? "");
+        setValue("phone", response.data.phone ?? "");
         console.log("loaded user again");
       } catch (error) {
         console.log({ error });
@@ -65,6 +78,11 @@ export default function Profile() {
     if (status === "authenticated") loadUserProfile();
     if (status === "unauthenticated") router.push("/");
   }, [status]);
+
+  async function handleSaveProfile({ name, email, phone }: FormDataProps) {
+    console.log({ name, phone, email });
+    //NEXT: validate user phone number with modal
+  }
 
   return (
     <Stack alignItems={"center"}>
@@ -90,6 +108,7 @@ export default function Profile() {
               Perfil público de
             </Text>
             <Heading>{userProfile?.name}</Heading>
+            <Text>{userProfile?.accounts[0].provider}</Text>
             <Stack w="full" mt="4">
               <Controller
                 control={control}
@@ -99,12 +118,14 @@ export default function Profile() {
                   <AppInput
                     placeholder="Seu nome"
                     label="Nome completo"
-                    error={null}
+                    error={formState.errors.name?.message}
                     value={value}
                     onChange={onChange}
+                    id="name"
                   />
                 )}
               />
+              <AppSpacer />
               <Controller
                 control={control}
                 name="email"
@@ -113,26 +134,38 @@ export default function Profile() {
                   <AppInput
                     placeholder="endereco@email.com"
                     label="Endereço de e-mail"
-                    error={null}
+                    error={formState.errors.email?.message}
                     value={value}
                     onChange={onChange}
+                    id="email"
+                    isDisabled={userProfile?.accounts[0].provider === "google"}
                   />
                 )}
               />
+              <AppSpacer />
               <Controller
                 control={control}
                 name="phone"
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                   <AppInput
-                    placeholder="99-87766-5544"
+                    placeholder="99877665544"
                     label="Seu número de telefone com DDD"
-                    error={null}
+                    error={formState.errors.phone?.message}
                     value={value}
                     onChange={onChange}
+                    id="phone"
                   />
                 )}
               />
+              <AppSpacer />
+              <Button
+                colorScheme="blue"
+                onClick={handleSubmit(handleSaveProfile)}
+                isDisabled={!formState.isDirty}
+              >
+                Salvar
+              </Button>
             </Stack>
           </>
         )}
