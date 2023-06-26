@@ -34,12 +34,16 @@ const profileSchema = yup.object({
     .required("Um endereço de e-mail é obrigatório."),
   phone: yup
     .string()
-    .required("Você precisa de um número de telefone para validar sua conta.")
-    .test(
-      "len",
-      "Não parece ser um número de telefone válido.",
-      (val) => !!val && val.length === 11
-    ),
+    .matches(
+      new RegExp("[0-9]{11}"),
+      "Não parece um número de telefone válido."
+    )
+    .required("Você precisa de um número de telefone para validar sua conta."),
+  // .test(
+  //   "len",
+  //   "Não parece ser um número de telefone válido.",
+  //   (val) => !!val && val.length === 11
+  // ),
 });
 
 export default function Profile() {
@@ -81,7 +85,12 @@ export default function Profile() {
 
   async function handleSaveProfile({ name, email, phone }: FormDataProps) {
     console.log({ name, phone, email });
-    //NEXT: validate user phone number with modal
+    try {
+      const otpResponse = await api.post("phone/send-code", {
+        phone: `+55${phone}`,
+      });
+      if (otpResponse.data.success) router.push(`/users/validate/${phone}`);
+    } catch (error) {}
   }
 
   return (
