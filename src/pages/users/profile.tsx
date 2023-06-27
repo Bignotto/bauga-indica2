@@ -39,11 +39,6 @@ const profileSchema = yup.object({
       "Não parece um número de telefone válido."
     )
     .required("Você precisa de um número de telefone para validar sua conta."),
-  // .test(
-  //   "len",
-  //   "Não parece ser um número de telefone válido.",
-  //   (val) => !!val && val.length === 11
-  // ),
 });
 
 export default function Profile() {
@@ -84,6 +79,7 @@ export default function Profile() {
   }, [status]);
 
   async function handleSaveProfile({ name, email, phone }: FormDataProps) {
+    //NEXT: update user registry!!
     console.log({ name, phone, email });
     try {
       const otpResponse = await api.post("phone/send-code", {
