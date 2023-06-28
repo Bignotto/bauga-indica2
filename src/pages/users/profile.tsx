@@ -76,12 +76,18 @@ export default function Profile() {
 
     if (status === "authenticated") loadUserProfile();
     if (status === "unauthenticated") router.push("/");
-  }, [status]);
+  }, [status, router, session?.user?.email, setValue]);
 
   async function handleSaveProfile({ name, email, phone }: FormDataProps) {
-    //NEXT: update user registry!!
-    console.log({ name, phone, email });
+    if (!userProfile) return;
+
     try {
+      const updateUserResponse = await api.post("users/update", {
+        userId: userProfile.id,
+        name,
+        phone,
+        email,
+      });
       const otpResponse = await api.post("phone/send-code", {
         phone: `+55${phone}`,
       });
@@ -98,6 +104,7 @@ export default function Profile() {
         px="4"
         mt="2"
       >
+        {/* TODO: add link to go back */}
         <AppLogo />
         <Flex bg="gray.800" h={0.5} w="100%" my="4" />
         {isLoading ? (
