@@ -28,12 +28,16 @@ export default function ServiceDetails() {
 
   useEffect(() => {
     async function loadService() {
-      const response = await api.get(`/services/${serviceId}`);
-      setService(response.data);
-      setIsLoading(false);
+      try {
+        const response = await api.get(`/services/${serviceId}`);
+        setService(response.data);
+      } catch (error) {
+        console.log({ error });
+      } finally {
+        setIsLoading(false);
+      }
     }
-
-    loadService();
+    if (serviceId) loadService();
   }, [serviceId]);
 
   return (
