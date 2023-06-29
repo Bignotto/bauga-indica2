@@ -1,6 +1,7 @@
 import AppInput from "@/components/AppInput";
 import AppLogo from "@/components/AppLogo";
 import AppSpacer from "@/components/AppSpacer";
+import FileSelect from "@/components/FileSelect/outro";
 import { api } from "@/services/api";
 import {
   Avatar,
@@ -178,6 +179,9 @@ export default function Profile() {
               >
                 Salvar
               </Button>
+              <AppSpacer />
+              <FileSelect />
+              <AppSpacer height="xlg" />
             </Stack>
           </>
         )}
