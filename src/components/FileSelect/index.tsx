@@ -43,3 +43,5 @@ const FileSelect = () => {
 };
 
 export default FileSelect;
+
+//NEXT:find a way to style the regular input to select files
