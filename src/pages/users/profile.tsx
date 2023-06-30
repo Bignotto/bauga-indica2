@@ -1,13 +1,17 @@
 import AppInput from "@/components/AppInput";
 import AppLogo from "@/components/AppLogo";
 import AppSpacer from "@/components/AppSpacer";
-import FileSelect from "@/components/FileSelect/outro";
 import { api } from "@/services/api";
+import { supabase } from "@/services/supabase";
 import {
   Avatar,
   Button,
   Flex,
   Heading,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
   Spinner,
   Stack,
   Text,
@@ -16,8 +20,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Account, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { MdImage } from "react-icons/md";
 
 import * as yup from "yup";
 
@@ -51,12 +56,15 @@ export default function Profile() {
     }
   >();
   const [isLoading, setIsLoading] = useState(true);
+  const [avatarFile, setAvatarFile] = useState();
 
   const { control, handleSubmit, formState, setValue } = useForm<FormDataProps>(
     {
       resolver: yupResolver(profileSchema),
     }
   );
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   //TODO: encapsulate this in a hook
   useEffect(() => {
@@ -93,6 +101,23 @@ export default function Profile() {
         phone: `+55${phone}`,
       });
       if (otpResponse.data.success) router.push(`/users/validate/${phone}`);
+    } catch (error) {}
+  }
+
+  async function handleAvatarSelect(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+    if (!e.target.files) return;
+    try {
+      const { data, error } = await supabase.storage
+        .from("images_avatars")
+        .upload(userProfile?.id!, e.target.files[0], {
+          upsert: true,
+        });
+
+      console.log({ error });
+      console.log({ data });
+      console.log(e.target.files[0].name);
+      //NEXT: Patch user with new avatar path
     } catch (error) {}
   }
 
@@ -180,7 +205,29 @@ export default function Profile() {
                 Salvar
               </Button>
               <AppSpacer />
-              <FileSelect />
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">
+                  <MdImage />
+                </InputLeftElement>
+                <input
+                  type="file"
+                  onChange={handleAvatarSelect}
+                  ref={inputRef}
+                  style={{ display: "none" }}
+                />
+                <Input
+                  placeholder={"Your file ..."}
+                  value={inputRef.current?.value}
+                />
+                <InputRightElement>
+                  <Button
+                    onClick={() => inputRef.current?.click()}
+                    colorScheme="blue"
+                  >
+                    ...
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
               <AppSpacer height="xlg" />
             </Stack>
           </>

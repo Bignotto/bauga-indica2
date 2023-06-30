@@ -26,13 +26,10 @@ const FileSelect = () => {
         type="file"
         accept='"image/png, image/jpeg"'
         ref={inputRef}
-        style={{ display: "none" }}
+        // style={{ display: "none" }}
+        onChange={() => console.log("ahá!")}
       ></input>
-      <Input
-        placeholder={"Your file ..."}
-        value={inputRef.current?.value}
-        contentEditable={false}
-      />
+      <Input placeholder={"Your file ..."} value={inputRef.current?.value} />
       <InputRightElement>
         <Button onClick={() => inputRef.current?.click()} colorScheme="blue">
           ...
