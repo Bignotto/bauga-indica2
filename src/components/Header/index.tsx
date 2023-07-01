@@ -61,7 +61,7 @@ export default function Header() {
           <Link as={NextLink} href="/users/profile">
             <Avatar
               name={session.user?.name!}
-              src={session.user?.image!}
+              src={userProfile?.image!}
               bg="teal.500"
             >
               {userProfile?.phoneConfirmed ? (
