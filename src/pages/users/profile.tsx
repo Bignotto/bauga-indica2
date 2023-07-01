@@ -56,7 +56,7 @@ export default function Profile() {
     }
   >();
   const [isLoading, setIsLoading] = useState(true);
-  const [avatarFile, setAvatarFile] = useState();
+  const [avatarPath, setAvatarPath] = useState("");
 
   const { control, handleSubmit, formState, setValue } = useForm<FormDataProps>(
     {
@@ -75,6 +75,7 @@ export default function Profile() {
         setValue("name", response.data.name ?? "");
         setValue("email", response.data.email ?? "");
         setValue("phone", response.data.phone ?? "");
+        setAvatarPath(response.data.image ?? "");
         console.log("loaded user again");
       } catch (error) {
         console.log({ error });
@@ -106,7 +107,7 @@ export default function Profile() {
 
   async function handleAvatarSelect(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    if (!e.target.files) return;
+    if (!e.target.files || e.target.files[0] === undefined) return;
     try {
       const { data, error } = await supabase.storage
         .from("images_avatars")
@@ -118,7 +119,17 @@ export default function Profile() {
       console.log({ data });
       console.log(e.target.files[0].name);
       //NEXT: Patch user with new avatar path
-    } catch (error) {}
+      const updateResponse = await api.patch("/users/updateImage", {
+        image: `${process.env.NEXT_PUBLIC_SUPABASEURL}/storage/v1/object/public/images_avatars/${e.target.files[0].name}`,
+        userId: userProfile?.id,
+      });
+
+      setAvatarPath(
+        `${process.env.NEXT_PUBLIC_SUPABASEURL}/storage/v1/object/public/images_avatars/${e.target.files[0].name}`
+      );
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
   return (
@@ -137,11 +148,7 @@ export default function Profile() {
           <Spinner />
         ) : (
           <>
-            <Avatar
-              src={userProfile?.image!}
-              name={userProfile?.name!}
-              size={"2xl"}
-            />
+            <Avatar src={avatarPath} name={userProfile?.name!} size={"2xl"} />
             <Text fontWeight={"bold"} fontSize={"lg"} mt="4">
               Perfil público de
             </Text>
