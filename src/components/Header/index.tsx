@@ -12,12 +12,7 @@ import { User } from "@prisma/client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import {
-  MdEdit,
-  MdMessage,
-  MdOutlineDashboard,
-  MdOutlinePhonelinkErase,
-} from "react-icons/md";
+import { MdEdit, MdMessage, MdOutlineDashboard } from "react-icons/md";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 
 export default function Header() {
@@ -83,11 +78,10 @@ export default function Header() {
           </Flex>
         </Flex>
         <HStack>
-          <MdOutlineDashboard size={24} />
+          <Link as={NextLink} href="/dashboard" _hover={{ bg: "#e6e6e6" }}>
+            <MdOutlineDashboard size={24} />
+          </Link>
           <MdMessage size={24} />
-          <Button variant={"ghost"}>
-            <MdOutlinePhonelinkErase size={24} />
-          </Button>
           <Button onClick={() => signOut()} variant={"ghost"}>
             <RiLogoutBoxRLine size={24} color="#2C5282" />
           </Button>
@@ -105,7 +99,3 @@ export default function Header() {
     </Flex>
   );
 }
-
-// MdOutlinePhonelinkErase -> phone not confirmed
-// MdOutlineSmartphone => phone confirmed
-// PiSignOutFill -signout
