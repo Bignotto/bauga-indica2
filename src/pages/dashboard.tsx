@@ -9,13 +9,13 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useAuth } from "../hooks/AuthContext";
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
   const router = useRouter();
+  const { status } = useAuth();
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/");

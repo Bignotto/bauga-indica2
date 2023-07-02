@@ -18,13 +18,13 @@ import {
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Account, User } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { MdImage } from "react-icons/md";
 
 import * as yup from "yup";
+import { useAuth } from "../../hooks/AuthContext";
 
 type FormDataProps = {
   name: string;
@@ -49,7 +49,8 @@ const profileSchema = yup.object({
 
 export default function Profile() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+
+  const { session, status } = useAuth();
   const [userProfile, setUserProfile] = useState<
     User & {
       accounts: Account[];
@@ -66,11 +67,10 @@ export default function Profile() {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  //TODO: encapsulate this in a hook
   useEffect(() => {
     async function loadUserProfile() {
       try {
-        const response = await api.get(`users/${session?.user?.email}`);
+        const response = await api.get(`users/${session?.email}`);
         setUserProfile(response.data);
         setValue("name", response.data.name ?? "");
         setValue("email", response.data.email ?? "");
@@ -86,7 +86,7 @@ export default function Profile() {
 
     if (status === "authenticated") loadUserProfile();
     if (status === "unauthenticated") router.push("/");
-  }, [status, router, session?.user?.email, setValue]);
+  }, [status, router, session?.email, setValue]);
 
   async function handleSaveProfile({ name, email, phone }: FormDataProps) {
     if (!userProfile) return;
@@ -115,10 +115,6 @@ export default function Profile() {
           upsert: true,
         });
 
-      console.log({ error });
-      console.log({ data });
-      console.log(e.target.files[0].name);
-      //NEXT: Patch user with new avatar path
       const updateResponse = await api.patch("/users/updateImage", {
         image: `${process.env.NEXT_PUBLIC_SUPABASEURL}/storage/v1/object/public/images_avatars/${e.target.files[0].name}`,
         userId: userProfile?.id,
