@@ -12,7 +12,8 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { GiToolbox } from "react-icons/gi";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
+import { LuMousePointerClick } from "react-icons/lu";
+import { MdMessage, MdOutlineArrowRightAlt } from "react-icons/md";
 import { useAuth } from "../hooks/AuthContext";
 
 export default function Dashboard() {
@@ -75,6 +76,70 @@ export default function Dashboard() {
           <HStack>
             <Link as={NextLink} href="" fontSize={"sm"} fontWeight={"bold"}>
               Meus anúncios
+            </Link>
+            <MdOutlineArrowRightAlt size={30} />
+          </HStack>
+        </HStack>
+      </Stack>
+
+      <Stack w={["100%", 500]} mt="4">
+        <Text>Suas mensagens:</Text>
+        <HStack
+          bg="gray.200"
+          p={"6"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <HStack>
+            <MdMessage size={38} />
+            <Flex
+              flexDir={"column"}
+              justifyContent={"center"}
+              alignItems={"flex-start"}
+              px={"4"}
+              ml={"4"}
+            >
+              <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
+                8
+              </Text>
+              <Text>mensagens</Text>
+            </Flex>
+          </HStack>
+          <HStack>
+            <Link as={NextLink} href="" fontSize={"sm"} fontWeight={"bold"}>
+              Minhas mensagens
+            </Link>
+            <MdOutlineArrowRightAlt size={30} />
+          </HStack>
+        </HStack>
+      </Stack>
+
+      <Stack w={["100%", 500]} mt="4">
+        <Text>Suas visualizações:</Text>
+        <HStack
+          bg="gray.200"
+          p={"6"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <HStack>
+            <LuMousePointerClick size={38} />
+            <Flex
+              flexDir={"column"}
+              justifyContent={"center"}
+              alignItems={"flex-start"}
+              px={"4"}
+              ml={"4"}
+            >
+              <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
+                24
+              </Text>
+              <Text>clicks</Text>
+            </Flex>
+          </HStack>
+          <HStack>
+            <Link as={NextLink} href="" fontSize={"sm"} fontWeight={"bold"}>
+              Minhas visualizações
             </Link>
             <MdOutlineArrowRightAlt size={30} />
           </HStack>
