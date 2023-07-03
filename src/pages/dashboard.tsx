@@ -11,6 +11,8 @@ import NextLink from "next/link";
 
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { GiToolbox } from "react-icons/gi";
+import { MdOutlineArrowRightAlt } from "react-icons/md";
 import { useAuth } from "../hooks/AuthContext";
 
 export default function Dashboard() {
@@ -46,6 +48,38 @@ export default function Dashboard() {
           Criar anúncio
         </Button>
       </HStack>
+
+      <Stack w={["100%", 500]} mt="4">
+        <Text>Seus anúncios:</Text>
+        <HStack
+          bg="gray.200"
+          p={"6"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <HStack>
+            <GiToolbox size={38} />
+            <Flex
+              flexDir={"column"}
+              justifyContent={"center"}
+              alignItems={"flex-start"}
+              px={"4"}
+              ml={"4"}
+            >
+              <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
+                4
+              </Text>
+              <Text>anúncios</Text>
+            </Flex>
+          </HStack>
+          <HStack>
+            <Link as={NextLink} href="" fontSize={"sm"} fontWeight={"bold"}>
+              Meus anúncios
+            </Link>
+            <MdOutlineArrowRightAlt size={30} />
+          </HStack>
+        </HStack>
+      </Stack>
     </Stack>
   );
 }
