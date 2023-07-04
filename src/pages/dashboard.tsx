@@ -9,19 +9,38 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
+import { api } from "@/services/api";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GiToolbox } from "react-icons/gi";
 import { LuMousePointerClick } from "react-icons/lu";
-import { MdMessage, MdOutlineArrowRightAlt } from "react-icons/md";
+import { MdAdd, MdMessage, MdOutlineArrowRightAlt } from "react-icons/md";
 import { useAuth } from "../hooks/AuthContext";
 
 export default function Dashboard() {
   const router = useRouter();
-  const { status } = useAuth();
+  const { status, session } = useAuth();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [adsCount, setAdsCount] = useState(0);
+  const [messagesCount, setMessagesCount] = useState(0);
+  const [clicksCount, setClicksCount] = useState(0);
 
   useEffect(() => {
+    async function loadDashboardProps() {
+      try {
+        const response = await api.get("users/dashboard");
+        setAdsCount(response.data.servicesCount);
+        setMessagesCount(response.data.messagesCount);
+        setClicksCount(response.data.visualizationsCount);
+      } catch (error) {
+        console.log({ error });
+      } finally {
+        setIsLoading(false);
+      }
+    }
     if (status === "unauthenticated") router.push("/");
+    if (status === "authenticated") loadDashboardProps();
   }, [router, status]);
 
   return (
@@ -34,18 +53,18 @@ export default function Dashboard() {
       >
         <Flex>
           <Link as={NextLink} href="/users/profile">
-            <Avatar name={"Big"} src={""} bg="teal.500" />
+            <Avatar name={session?.name} src={session?.image} bg="teal.500" />
           </Link>
           <Stack ml="2" justifyContent={"center"}>
-            <Text mb="-1.5" fontSize={"sm"}>
-              Thiago Bignotto
+            <Text mb="-1.5" fontSize={"xs"}>
+              {session?.name}
             </Text>
-            <Text mt="-1.5" fontSize={"sm"}>
-              bignotto@email.com
+            <Text mt="-1.5" fontSize={"xs"}>
+              {session?.email}
             </Text>
           </Stack>
         </Flex>
-        <Button colorScheme="blue" size={"sm"}>
+        <Button colorScheme="blue" size={"sm"} leftIcon={<MdAdd size={25} />}>
           Criar anúncio
         </Button>
       </HStack>
@@ -68,7 +87,7 @@ export default function Dashboard() {
               ml={"4"}
             >
               <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
-                4
+                {adsCount}
               </Text>
               <Text>anúncios</Text>
             </Flex>
@@ -100,7 +119,7 @@ export default function Dashboard() {
               ml={"4"}
             >
               <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
-                8
+                {messagesCount}
               </Text>
               <Text>mensagens</Text>
             </Flex>
@@ -132,7 +151,7 @@ export default function Dashboard() {
               ml={"4"}
             >
               <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
-                24
+                {clicksCount}
               </Text>
               <Text>clicks</Text>
             </Flex>
