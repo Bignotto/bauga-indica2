@@ -33,7 +33,7 @@ export default async function handler(
   return res.status(200).send(services);
 }
 
-//NEXT: Implement search logger
+//TODO: Implement search logger
 /*
 Implement a function to save data about the search being made
 - what is being searched
