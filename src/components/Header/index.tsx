@@ -1,4 +1,3 @@
-import { api } from "@/services/api";
 import {
   Avatar,
   AvatarBadge,
@@ -9,39 +8,23 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { User } from "@prisma/client";
-import { signIn, signOut, useSession } from "next-auth/react";
 import NextLink from "next/link";
-import { FormEvent, useEffect, useState } from "react";
-import {
-  MdEdit,
-  MdMessage,
-  MdOutlineDashboard,
-  MdOutlinePhonelinkErase,
-} from "react-icons/md";
+import { FormEvent, useState } from "react";
+import { MdEdit, MdMessage, MdOutlineDashboard } from "react-icons/md";
 import { RiLogoutBoxRLine } from "react-icons/ri";
+import { useAuth } from "../../hooks/AuthContext";
 
 export default function Header() {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
+  const { session, appSignIn, appSignOut, status } = useAuth();
+
   const [userProfile, setUserProfile] = useState<User>();
-
-  //TODO: encapsulate this in a hook
-  useEffect(() => {
-    async function loadUserProfile() {
-      const response = await api.get(`users/${session?.user?.email}`);
-      setUserProfile(response.data);
-      console.log("loaded user again");
-    }
-
-    if (status === "authenticated") {
-      loadUserProfile();
-    }
-  }, [status]);
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
     try {
-      await signIn();
+      await appSignIn();
     } catch (error) {
       console.log({ error });
     }
@@ -59,11 +42,7 @@ export default function Header() {
       <Flex w="100%" h="16" alignItems="center" justifyContent="space-between">
         <Flex>
           <Link as={NextLink} href="/users/profile">
-            <Avatar
-              name={session.user?.name!}
-              src={userProfile?.image!}
-              bg="teal.500"
-            >
+            <Avatar name={session?.name!} src={session?.image!} bg="teal.500">
               {userProfile?.phoneConfirmed ? (
                 <AvatarBadge bg={"blue.500"} boxSize={"4"} borderWidth={"thin"}>
                   <MdEdit size={12} />
@@ -77,18 +56,17 @@ export default function Header() {
           </Link>
           <Flex flexDir={"column"} ml="2" justifyContent="center">
             <Text fontWeight="bold" fontSize="xs">
-              {session.user?.name}
+              {session?.name}
             </Text>
-            <Text fontSize="xs">{session.user?.email}</Text>
+            <Text fontSize="xs">{session?.email}</Text>
           </Flex>
         </Flex>
         <HStack>
-          <MdOutlineDashboard size={24} />
+          <Link as={NextLink} href="/dashboard" _hover={{ bg: "#e6e6e6" }}>
+            <MdOutlineDashboard size={24} />
+          </Link>
           <MdMessage size={24} />
-          <Button variant={"ghost"}>
-            <MdOutlinePhonelinkErase size={24} />
-          </Button>
-          <Button onClick={() => signOut()} variant={"ghost"}>
+          <Button onClick={() => appSignOut()} variant={"ghost"}>
             <RiLogoutBoxRLine size={24} color="#2C5282" />
           </Button>
         </HStack>
@@ -105,7 +83,3 @@ export default function Header() {
     </Flex>
   );
 }
-
-// MdOutlinePhonelinkErase -> phone not confirmed
-// MdOutlineSmartphone => phone confirmed
-// PiSignOutFill -signout
