@@ -1,13 +1,16 @@
 import AppInput from "@/components/AppInput";
+import { api } from "@/services/api";
 import {
   Button,
   HStack,
   Heading,
+  Select,
   Stack,
   Text,
   Textarea,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { ServiceType } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -37,10 +40,19 @@ export default function NewService() {
     resolver: yupResolver(serviceSchema),
   });
 
-  const [serviceTypes, setServiceTypes] = useState();
+  const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
 
   useEffect(() => {
+    async function loadServiceTypes() {
+      try {
+        const response = await api.get("services/types");
+        setServiceTypes(response.data);
+      } catch (error) {
+        console.log({ error });
+      }
+    }
     if (status === "unauthenticated") router.push("/");
+    if (status === "authenticated") loadServiceTypes();
   }, [router, status]);
 
   async function handleSaveService({
@@ -65,6 +77,30 @@ export default function NewService() {
             Um serviço é tudo aquilo que você pode fazer para o seu cliente.
           </Text>
         </HStack>
+
+        <Controller
+          control={control}
+          name="serviceType"
+          render={({ field: { onChange, value } }) => (
+            <>
+              <Text fontSize={"sm"}>Tipo de serviço:</Text>
+              <Select
+                defaultValue={serviceTypes[0].id}
+                borderColor={"gray.800"}
+                value={value}
+                onChange={onChange}
+                mb={"4"}
+              >
+                {serviceTypes.map((t) => (
+                  <option value={t.id} key={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </Select>
+            </>
+          )}
+        />
+
         <Controller
           control={control}
           name="title"
