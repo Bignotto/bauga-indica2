@@ -5,6 +5,7 @@ import {
   HStack,
   Heading,
   Select,
+  Spinner,
   Stack,
   Text,
   Textarea,
@@ -28,32 +29,45 @@ type FormDataProps = {
 const serviceSchema = yup.object({
   title: yup.string().required("O nome do serviço é obrigatório."),
   description: yup.string().required("Uma descrição detalhada é obrigatório."),
-  value: yup.number().positive("Preço inválido"),
-  serviceType: yup.number(),
+  value: yup
+    .number()
+    .required("Preço é obrigatório")
+    .positive("Preço inválido")
+    .min(1, "Preo é obrigatório")
+    .transform((value) =>
+      isNaN(value) || value === null || value === undefined ? 0 : value
+    ),
+  serviceType: yup.number().required("Escolha um tipo de serviço."),
 });
 
 export default function NewService() {
   const router = useRouter();
   const { status } = useAuth();
 
-  const { control, handleSubmit, formState } = useForm<FormDataProps>({
-    resolver: yupResolver(serviceSchema),
-  });
+  const { control, handleSubmit, formState, setValue } = useForm<FormDataProps>(
+    {
+      resolver: yupResolver(serviceSchema),
+    }
+  );
 
   const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadServiceTypes() {
       try {
         const response = await api.get("services/types");
         setServiceTypes(response.data);
+        setValue("serviceType", response.data[0].id ?? 1);
       } catch (error) {
         console.log({ error });
+      } finally {
+        setIsLoading(false);
       }
     }
     if (status === "unauthenticated") router.push("/");
     if (status === "authenticated") loadServiceTypes();
-  }, [router, status]);
+  }, [router, status, setValue]);
 
   async function handleSaveService({
     title,
@@ -78,28 +92,34 @@ export default function NewService() {
           </Text>
         </HStack>
 
-        <Controller
-          control={control}
-          name="serviceType"
-          render={({ field: { onChange, value } }) => (
-            <>
-              <Text fontSize={"sm"}>Tipo de serviço:</Text>
-              <Select
-                defaultValue={serviceTypes[0].id}
-                borderColor={"gray.800"}
-                value={value}
-                onChange={onChange}
-                mb={"4"}
-              >
-                {serviceTypes.map((t) => (
-                  <option value={t.id} key={t.id}>
-                    {t.name}
-                  </option>
-                ))}
-              </Select>
-            </>
-          )}
-        />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <Controller
+            control={control}
+            name="serviceType"
+            render={({ field: { onChange, value } }) => (
+              <>
+                <Text fontSize={"sm"}>Tipo de serviço:</Text>
+                <Select
+                  borderColor={"gray.800"}
+                  value={value}
+                  onChange={onChange}
+                  mb={"4"}
+                  _hover={{
+                    borderColor: "blue.400",
+                  }}
+                >
+                  {serviceTypes.map((t) => (
+                    <option value={t.id} key={t.id}>
+                      {t.name}
+                    </option>
+                  ))}
+                </Select>
+              </>
+            )}
+          />
+        )}
 
         <Controller
           control={control}
@@ -147,7 +167,7 @@ export default function NewService() {
             />
           )}
         />
-        <HStack justifyContent={"center"}>
+        <HStack justifyContent={"center"} mt={"2"}>
           <Button w={"30%"}>Cancelar</Button>
           <Button
             w={"30%"}
