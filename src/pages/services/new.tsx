@@ -75,7 +75,19 @@ export default function NewService() {
     serviceType,
     value,
   }: FormDataProps) {
-    console.log({ title, description, serviceType, value });
+    try {
+      const response = await api.post("services/create", {
+        title,
+        description,
+        serviceType,
+        value,
+      });
+
+      if (response.status === 201) router.push("/dashboard");
+      console.log({ response });
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
   return (
