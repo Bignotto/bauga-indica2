@@ -64,7 +64,12 @@ export default function Dashboard() {
             </Text>
           </Stack>
         </Flex>
-        <Button colorScheme="blue" size={"sm"} leftIcon={<MdAdd size={25} />}>
+        <Button
+          colorScheme="blue"
+          size={"sm"}
+          leftIcon={<MdAdd size={25} />}
+          onClick={() => router.push("/services/new")}
+        >
           Criar anúncio
         </Button>
       </HStack>

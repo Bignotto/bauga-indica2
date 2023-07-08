@@ -16,7 +16,7 @@ export default async function handler(
   const session = await getServerSession(req, res, authOptions);
   if (!session) res.status(403).end();
 
-  const user = prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       email: `${session?.user?.email}`,
     },
@@ -29,7 +29,7 @@ export default async function handler(
 
   //TODO: complete dashboard counters!
   const dashboardProps: DashboardProps = {
-    servicesCount: user.services.length,
+    servicesCount: user!.services.length,
     messagesCount: 0,
     visualizationsCount: 0,
   };
