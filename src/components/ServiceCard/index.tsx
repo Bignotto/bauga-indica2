@@ -1,4 +1,5 @@
 import { Button, Flex, Tag, Text } from "@chakra-ui/react";
+import { Service, ServiceType, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import { BsInfoSquare } from "react-icons/bs";
@@ -11,6 +12,10 @@ type ServiceCardProps = {
   username: string;
   serviceRating: number;
   value: number;
+  serviceObject?: Service & {
+    provider: User;
+    serviceType: ServiceType;
+  };
 };
 
 export default function ServiceCard({
@@ -40,7 +45,7 @@ export default function ServiceCard({
           {serviceType}
         </Tag>
       </Flex>
-      <Flex flexDir="row" justifyContent="space-between" m="2">
+      <Flex flexDir="row" justifyContent="space-between" my={"2"}>
         <Text>{username}</Text>
         <Text>{serviceRating}</Text>
       </Flex>
