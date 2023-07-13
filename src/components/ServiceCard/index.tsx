@@ -1,52 +1,46 @@
 import { Button, Flex, Tag, Text } from "@chakra-ui/react";
+import { Service, ServiceType, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import { BsInfoSquare } from "react-icons/bs";
 
 type ServiceCardProps = {
-  id: string;
-  name: string;
-  description: string;
-  serviceType: string;
-  username: string;
   serviceRating: number;
-  value: number;
+  serviceObject?: Service & {
+    provider: User;
+    serviceType: ServiceType;
+  };
 };
 
 export default function ServiceCard({
-  id,
-  name,
-  description,
-  serviceType,
-  username,
   serviceRating,
-  value,
+  serviceObject,
 }: ServiceCardProps) {
   const router = useRouter();
 
   function handleSeeDetails(event: FormEvent) {
     event.preventDefault();
 
-    router.push(`/services/${id}`);
+    router.push(`/services/${serviceObject?.id}`);
   }
   return (
     <Flex w="100%" bg="gray.100" flexDir="column" p="2" mt="4">
       <Text fontSize="larger" fontWeight="bold">
-        {name}
+        {serviceObject?.title}
       </Text>
-      <Text>{description}</Text>
+      <Text>{serviceObject?.description}</Text>
       <Flex mt="2">
         <Tag variant="solid" colorScheme="blue">
-          {serviceType}
+          {serviceObject?.serviceType.name}
         </Tag>
       </Flex>
-      <Flex flexDir="row" justifyContent="space-between" m="2">
-        <Text>{username}</Text>
+      <Flex flexDir="row" justifyContent="space-between" my={"2"}>
+        <Text>{serviceObject?.provider.name}</Text>
         <Text>{serviceRating}</Text>
       </Flex>
       <Flex flexDir={"column"}>
         <Text fontSize={"lg"} fontWeight={"bold"} color={"blue.500"}>
-          R$ {value}
+          R$ {serviceObject?.value}
         </Text>
         <Button
           onClick={handleSeeDetails}

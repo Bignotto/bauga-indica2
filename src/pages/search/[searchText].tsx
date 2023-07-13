@@ -43,16 +43,7 @@ export default function SearchResults() {
 
           {servicesList &&
             servicesList.map((s) => (
-              <ServiceCard
-                id={s.id}
-                name={s.title}
-                description={s.description}
-                serviceRating={5}
-                serviceType={s.serviceType.name}
-                username={s.provider.name ?? "desconhecido"}
-                value={s.value}
-                key={s.id}
-              />
+              <ServiceCard serviceObject={s} serviceRating={5} key={s.id} />
             ))}
         </Flex>
       </Flex>

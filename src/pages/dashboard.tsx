@@ -74,101 +74,108 @@ export default function Dashboard() {
         </Button>
       </HStack>
 
-      <Stack w={["100%", 500]} mt="4">
-        <Text>Seus anúncios:</Text>
-        <HStack
-          bg="gray.200"
-          p={"6"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-        >
-          <HStack>
-            <GiToolbox size={38} />
-            <Flex
-              flexDir={"column"}
-              justifyContent={"center"}
-              alignItems={"flex-start"}
-              px={"4"}
-              ml={"4"}
-            >
-              <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
-                {adsCount}
-              </Text>
-              <Text>anúncios</Text>
-            </Flex>
+      <Flex flexDir="column" px="4">
+        <Stack w={["100%", 500]} mt="4">
+          <Text>Seus anúncios:</Text>
+          <HStack
+            bg="gray.200"
+            p={"6"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <HStack>
+              <GiToolbox size={38} />
+              <Flex
+                flexDir={"column"}
+                justifyContent={"center"}
+                alignItems={"flex-start"}
+                px={"4"}
+                ml={"2"}
+              >
+                <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
+                  {adsCount}
+                </Text>
+                <Text>anúncios</Text>
+              </Flex>
+            </HStack>
+            <HStack>
+              <Link
+                as={NextLink}
+                href="/users/services"
+                fontSize={"xs"}
+                fontWeight={"bold"}
+              >
+                Ver anúncios
+              </Link>
+              <MdOutlineArrowRightAlt size={30} />
+            </HStack>
           </HStack>
-          <HStack>
-            <Link as={NextLink} href="" fontSize={"sm"} fontWeight={"bold"}>
-              Meus anúncios
-            </Link>
-            <MdOutlineArrowRightAlt size={30} />
-          </HStack>
-        </HStack>
-      </Stack>
+        </Stack>
 
-      <Stack w={["100%", 500]} mt="4">
-        <Text>Suas mensagens:</Text>
-        <HStack
-          bg="gray.200"
-          p={"6"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-        >
-          <HStack>
-            <MdMessage size={38} />
-            <Flex
-              flexDir={"column"}
-              justifyContent={"center"}
-              alignItems={"flex-start"}
-              px={"4"}
-              ml={"4"}
-            >
-              <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
-                {messagesCount}
-              </Text>
-              <Text>mensagens</Text>
-            </Flex>
+        <Stack w={["100%", 500]} mt="4">
+          <Text>Suas mensagens:</Text>
+          <HStack
+            bg="gray.200"
+            p={"6"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <HStack>
+              <MdMessage size={38} />
+              <Flex
+                flexDir={"column"}
+                justifyContent={"center"}
+                alignItems={"flex-start"}
+                px={"4"}
+                ml={"2"}
+              >
+                <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
+                  {messagesCount}
+                </Text>
+                <Text>mensagens</Text>
+              </Flex>
+            </HStack>
+            <HStack>
+              <Link as={NextLink} href="" fontSize={"xs"} fontWeight={"bold"}>
+                Ver mensagens
+              </Link>
+              <MdOutlineArrowRightAlt size={30} />
+            </HStack>
           </HStack>
-          <HStack>
-            <Link as={NextLink} href="" fontSize={"sm"} fontWeight={"bold"}>
-              Minhas mensagens
-            </Link>
-            <MdOutlineArrowRightAlt size={30} />
-          </HStack>
-        </HStack>
-      </Stack>
+        </Stack>
 
-      <Stack w={["100%", 500]} mt="4">
-        <Text>Suas visualizações:</Text>
-        <HStack
-          bg="gray.200"
-          p={"6"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-        >
-          <HStack>
-            <LuMousePointerClick size={38} />
-            <Flex
-              flexDir={"column"}
-              justifyContent={"center"}
-              alignItems={"flex-start"}
-              px={"4"}
-              ml={"4"}
-            >
-              <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
-                {clicksCount}
-              </Text>
-              <Text>clicks</Text>
-            </Flex>
+        <Stack w={["100%", 500]} mt="4">
+          <Text>Suas visualizações:</Text>
+          <HStack
+            bg="gray.200"
+            p={"6"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <HStack justifyContent={"space-between"}>
+              <LuMousePointerClick size={38} />
+              <Flex
+                flexDir={"column"}
+                justifyContent={"center"}
+                alignItems={"flex-start"}
+                px={"4"}
+                ml={"2"}
+              >
+                <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
+                  {clicksCount}
+                </Text>
+                <Text>clicks</Text>
+              </Flex>
+            </HStack>
+            <HStack>
+              <Link as={NextLink} href="" fontSize={"xs"} fontWeight={"bold"}>
+                Ver clicks
+              </Link>
+              <MdOutlineArrowRightAlt size={30} />
+            </HStack>
           </HStack>
-          <HStack>
-            <Link as={NextLink} href="" fontSize={"sm"} fontWeight={"bold"}>
-              Minhas visualizações
-            </Link>
-            <MdOutlineArrowRightAlt size={30} />
-          </HStack>
-        </HStack>
-      </Stack>
+        </Stack>
+      </Flex>
     </Stack>
   );
 }
