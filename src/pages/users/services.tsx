@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import ServiceCard from "@/components/ServiceCard";
+import { api } from "@/services/api";
 import {
   Box,
   HStack,
@@ -9,10 +10,33 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { Service, ServiceType, User } from "@prisma/client";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../hooks/AuthContext";
 
 export default function Services() {
+  const { session } = useAuth();
+
   const [filterSelected, setFilterSelected] = useState("all");
+  const [servicesList, setServicesList] = useState<
+    (Service & {
+      provider: User;
+      serviceType: ServiceType;
+    })[]
+  >();
+
+  useEffect(() => {
+    async function loadUserServices() {
+      try {
+        const response = await api.get(`users/services/${session?.userId}`);
+        setServicesList(response.data);
+      } catch (error) {
+        console.log({ error });
+      }
+    }
+    loadUserServices();
+  }, [session?.userId]);
+
   return (
     <Stack alignItems="center" h="full" mt="4">
       <Stack w={["100%", 500]} px="4">
@@ -39,15 +63,13 @@ export default function Services() {
           </RadioGroup>
         </Box>
         <Stack>
-          <ServiceCard
-            description="Este é o teste de descrição do serviço que pode ser bastante longa ou até menos longa, desde que tenha pelo menos três linhas, e um pouco mais."
-            id="1"
-            name="Servico 1"
-            serviceRating={5}
-            serviceType="Jardinagem"
-            username="Eu mesmo"
-            value={200}
-          />
+          {servicesList?.map((service) => (
+            <ServiceCard
+              key={service.id}
+              serviceRating={5}
+              serviceObject={service}
+            />
+          ))}
         </Stack>
       </Stack>
     </Stack>
