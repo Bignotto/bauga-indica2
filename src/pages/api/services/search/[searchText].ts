@@ -8,6 +8,7 @@ export default async function handler(
 ) {
   const { searchText } = req.query;
 
+  //TODO: filter user own services from search results
   const services = await prisma.service.findMany({
     where: {
       OR: [
