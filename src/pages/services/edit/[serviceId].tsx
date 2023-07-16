@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Service, ServiceType, User } from "@prisma/client";
@@ -61,6 +62,8 @@ export default function EditService() {
   const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const toast = useToast();
+
   useEffect(() => {
     async function loadService() {
       try {
@@ -84,6 +87,32 @@ export default function EditService() {
     if (status === "unauthenticated") router.push("/");
     if (serviceId && status === "authenticated") loadService();
   }, [router, serviceId, setValue, status]);
+
+  const handleUpdateService = async ({
+    title,
+    description,
+    serviceType,
+    value,
+  }: FormDataProps) => {
+    try {
+      const response = await api.post(`services/update`, {
+        title,
+        description,
+        serviceType,
+        value,
+        serviceId,
+      });
+      if (response.status === 201) router.push("/dashboard");
+    } catch (error) {
+      console.log({ error });
+      toast({
+        title: "Oops",
+        isClosable: true,
+        description: "Something wrong",
+        status: "error",
+      });
+    }
+  };
 
   return (
     <Stack alignItems={"center"}>
@@ -170,7 +199,11 @@ export default function EditService() {
               />
             )}
           />
-          <Button colorScheme="blue" leftIcon={<BsSave size={18} />}>
+          <Button
+            onClick={handleSubmit(handleUpdateService)}
+            colorScheme="blue"
+            leftIcon={<BsSave size={18} />}
+          >
             Salvar
           </Button>
         </Stack>
