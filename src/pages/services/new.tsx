@@ -33,7 +33,7 @@ const serviceSchema = yup.object({
     .number()
     .required("Preço é obrigatório")
     .positive("Preço inválido")
-    .min(1, "Preo é obrigatório")
+    .min(1, "Preço é obrigatório")
     .transform((value) =>
       isNaN(value) || value === null || value === undefined ? 0 : value
     ),

@@ -3,6 +3,7 @@ import { Service, ServiceType, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import { BsInfoSquare } from "react-icons/bs";
+import { useAuth } from "../../hooks/AuthContext";
 
 type ServiceCardProps = {
   serviceRating: number;
@@ -16,6 +17,7 @@ export default function ServiceCard({
   serviceRating,
   serviceObject,
 }: ServiceCardProps) {
+  const { session } = useAuth();
   const router = useRouter();
 
   function handleSeeDetails(event: FormEvent) {
@@ -23,6 +25,13 @@ export default function ServiceCard({
 
     router.push(`/services/${serviceObject?.id}`);
   }
+
+  function handleEditService(event: FormEvent) {
+    event.preventDefault();
+
+    router.push(`/services/edit/${serviceObject?.id}`);
+  }
+
   return (
     <Flex w="100%" bg="gray.100" flexDir="column" p="2" mt="4">
       <Text fontSize="larger" fontWeight="bold">
@@ -42,14 +51,25 @@ export default function ServiceCard({
         <Text fontSize={"lg"} fontWeight={"bold"} color={"blue.500"}>
           R$ {serviceObject?.value}
         </Text>
-        <Button
-          onClick={handleSeeDetails}
-          colorScheme="blue"
-          rightIcon={<BsInfoSquare size={20} />}
-          w="100%"
-        >
-          Ver mais detalhes
-        </Button>
+        {session?.userId === serviceObject?.providerId ? (
+          <Button
+            onClick={handleEditService}
+            colorScheme="green"
+            rightIcon={<BsInfoSquare size={20} />}
+            w="100%"
+          >
+            Editar Serviço
+          </Button>
+        ) : (
+          <Button
+            onClick={handleSeeDetails}
+            colorScheme="blue"
+            rightIcon={<BsInfoSquare size={20} />}
+            w="100%"
+          >
+            Ver mais detalhes
+          </Button>
+        )}
       </Flex>
     </Flex>
   );
