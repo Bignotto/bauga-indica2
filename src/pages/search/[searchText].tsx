@@ -6,9 +6,12 @@ import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
 import { Service, ServiceType, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../hooks/AuthContext";
 
 export default function SearchResults() {
   const router = useRouter();
+  const { session } = useAuth();
+
   const { searchText } = router.query;
 
   const [servicesList, setServicesList] = useState<
@@ -23,6 +26,14 @@ export default function SearchResults() {
   useEffect(() => {
     async function loadServicesList() {
       const response = await api.get(`services/search/${searchText}`);
+
+      await api.post("log", {
+        event: "search",
+        subject: searchText ?? "vazio",
+        data: "",
+        userId: session?.userId ?? "guest",
+        userProvider: "",
+      });
 
       if (response) setServicesList(response.data);
       setIsLoading(false);

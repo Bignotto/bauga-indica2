@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   const { searchText } = req.query;
 
-  //TODO: filter user own services from search results
+  //TODO: filter user own services from search results?
   const services = await prisma.service.findMany({
     where: {
       OR: [
@@ -33,13 +33,3 @@ export default async function handler(
 
   return res.status(200).send(services);
 }
-
-//TODO: Implement search logger
-/*
-Implement a function to save data about the search being made
-- what is being searched
-- who is searching
-- when 
-
-Structure a model to save this data
-*/

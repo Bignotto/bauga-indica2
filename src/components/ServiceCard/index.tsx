@@ -1,3 +1,4 @@
+import { api } from "@/services/api";
 import { Button, Flex, Tag, Text } from "@chakra-ui/react";
 import { Service, ServiceType, User } from "@prisma/client";
 import { useRouter } from "next/router";
@@ -20,8 +21,16 @@ export default function ServiceCard({
   const { session } = useAuth();
   const router = useRouter();
 
-  function handleSeeDetails(event: FormEvent) {
+  async function handleSeeDetails(event: FormEvent) {
     event.preventDefault();
+
+    await api.post("log", {
+      event: "click",
+      subject: serviceObject?.id,
+      data: "",
+      userId: session?.userId,
+      userProvider: serviceObject?.providerId,
+    });
 
     router.push(`/services/${serviceObject?.id}`);
   }

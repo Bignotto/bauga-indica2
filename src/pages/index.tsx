@@ -12,7 +12,6 @@ export default function Home() {
     event.preventDefault();
     if (searchText.length === 0) return;
 
-    console.log("novo click -> ", searchText);
     router.push(`/search/${searchText}`);
   }
 
