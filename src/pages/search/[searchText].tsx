@@ -27,13 +27,14 @@ export default function SearchResults() {
     async function loadServicesList() {
       const response = await api.get(`services/search/${searchText}`);
 
-      await api.post("log", {
-        event: "search",
-        subject: searchText ?? "vazio",
-        data: "",
-        userId: session?.userId ?? "guest",
-        userProvider: "",
-      });
+      if (searchText?.length !== 0)
+        await api.post("log", {
+          event: "search",
+          subject: searchText ?? "vazio",
+          data: "",
+          userId: session?.userId ?? "guest",
+          userProvider: "",
+        });
 
       if (response) setServicesList(response.data);
       setIsLoading(false);
