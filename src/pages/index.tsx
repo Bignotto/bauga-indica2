@@ -30,9 +30,15 @@ export default function Home() {
             placeholder="qual serviço está procurando"
             backgroundColor="gray.100"
             borderColor="gray.900"
-            mr="2"
+            mr={["0", "2"]}
           />
-          <Button colorScheme="blue" type="submit" onClick={handleSearch}>
+          <Button
+            colorScheme="blue"
+            type="submit"
+            onClick={handleSearch}
+            width={["100%", "20%"]}
+            mt={["4", "0"]}
+          >
             Procurar
           </Button>
         </Flex>
