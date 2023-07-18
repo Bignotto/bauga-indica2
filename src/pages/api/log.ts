@@ -22,7 +22,7 @@ export default async function handler(
     },
   });
 
-  if (!result) return res.status(500).end();
+  if (!result) res.status(500).end();
 
-  return res.status(200).end();
+  res.status(200).end();
 }

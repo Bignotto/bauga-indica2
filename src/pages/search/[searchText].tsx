@@ -39,7 +39,7 @@ export default function SearchResults() {
       setIsLoading(false);
     }
     loadServicesList();
-  }, [searchText]);
+  }, [searchText, session?.userId]);
 
   return (
     <Stack alignItems={"center"}>
