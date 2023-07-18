@@ -101,3 +101,15 @@ model ServiceType {
 
   @@map(name: "service_types")
 }
+
+model Log {
+  id           Int      @id @default(autoincrement())
+  event        String
+  eventDate    DateTime @map(name: "event_date")
+  subject      String
+  data         String
+  userId       String   @map(name: "user_id")
+  userProvider String   @map(name: "user_provider")
+
+  @@map("log")
+}
