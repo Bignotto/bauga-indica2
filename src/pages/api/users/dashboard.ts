@@ -27,11 +27,17 @@ export default async function handler(
 
   if (!user) res.status(404).end();
 
+  const clicks = await prisma.log.findMany({
+    where: {
+      userProvider: user?.id,
+    },
+  });
+
   //TODO: complete dashboard counters!
   const dashboardProps: DashboardProps = {
     servicesCount: user!.services.length,
     messagesCount: 0,
-    visualizationsCount: 0,
+    visualizationsCount: clicks.length,
   };
 
   res.status(200).send(dashboardProps);
