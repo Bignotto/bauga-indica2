@@ -27,15 +27,6 @@ export default function SearchResults() {
     async function loadServicesList() {
       const response = await api.get(`services/search/${searchText}`);
 
-      if (searchText?.length !== 0)
-        await api.post("log", {
-          event: "search",
-          subject: searchText ?? "vazio",
-          data: "",
-          userId: session?.userId ?? "guest",
-          userProvider: "",
-        });
-
       if (response) setServicesList(response.data);
       setIsLoading(false);
     }
@@ -55,7 +46,12 @@ export default function SearchResults() {
 
           {servicesList &&
             servicesList.map((s) => (
-              <ServiceCard serviceObject={s} serviceRating={5} key={s.id} />
+              <ServiceCard
+                serviceObject={s}
+                serviceRating={5}
+                key={s.id}
+                searchedTerms={`${searchText}`}
+              />
             ))}
         </Flex>
       </Flex>
