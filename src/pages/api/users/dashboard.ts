@@ -34,6 +34,7 @@ export default async function handler(
   });
 
   //TODO: complete dashboard counters!
+  //NEXT: find a way to count clicks per service
   const dashboardProps: DashboardProps = {
     servicesCount: user!.services.length,
     messagesCount: 0,

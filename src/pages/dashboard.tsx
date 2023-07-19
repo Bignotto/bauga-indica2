@@ -168,7 +168,12 @@ export default function Dashboard() {
               </Flex>
             </HStack>
             <HStack>
-              <Link as={NextLink} href="" fontSize={"xs"} fontWeight={"bold"}>
+              <Link
+                as={NextLink}
+                href="/dashboard/clicks"
+                fontSize={"xs"}
+                fontWeight={"bold"}
+              >
                 Ver clicks
               </Link>
               <MdOutlineArrowRightAlt size={30} />
