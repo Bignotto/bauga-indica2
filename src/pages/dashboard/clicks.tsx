@@ -18,6 +18,7 @@ export default function Clicks() {
     loadClicks();
   }, []);
 
+  //NEXT: show results to user
   return (
     <Stack>
       <Text>This is the clicks page</Text>
