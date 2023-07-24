@@ -22,6 +22,11 @@ export default async function handler(
     where: {
       userProvider: user?.id,
     },
+    orderBy: {
+      _count: {
+        id: "desc",
+      },
+    },
   });
 
   const services = await prisma.service.findMany({
