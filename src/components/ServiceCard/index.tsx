@@ -7,6 +7,7 @@ import { BsInfoSquare } from "react-icons/bs";
 import { useAuth } from "../../hooks/AuthContext";
 
 type ServiceCardProps = {
+  searchedTerms: string;
   serviceRating: number;
   serviceObject?: Service & {
     provider: User;
@@ -15,6 +16,7 @@ type ServiceCardProps = {
 };
 
 export default function ServiceCard({
+  searchedTerms,
   serviceRating,
   serviceObject,
 }: ServiceCardProps) {
@@ -27,7 +29,7 @@ export default function ServiceCard({
     await api.post("log", {
       event: "click",
       subject: serviceObject?.id,
-      data: "",
+      data: searchedTerms,
       userId: session?.userId,
       userProvider: serviceObject?.providerId,
     });

@@ -33,7 +33,6 @@ export default async function handler(
     },
   });
 
-  //TODO: complete dashboard counters!
   const dashboardProps: DashboardProps = {
     servicesCount: user!.services.length,
     messagesCount: 0,

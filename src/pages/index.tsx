@@ -1,16 +1,28 @@
 import AppLogo from "@/components/AppLogo";
 import Header from "@/components/Header";
+import { api } from "@/services/api";
 import { Button, Flex, Input, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
+import { useAuth } from "../hooks/AuthContext";
 
 export default function Home() {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
 
+  const { session } = useAuth();
+
   async function handleSearch(event: FormEvent) {
     event.preventDefault();
     if (searchText.length === 0) return;
+
+    await api.post("log", {
+      event: "search",
+      subject: searchText,
+      data: "",
+      userId: session?.userId ?? "guest",
+      userProvider: "",
+    });
 
     router.push(`/search/${searchText}`);
   }
