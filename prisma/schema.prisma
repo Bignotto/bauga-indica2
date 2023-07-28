@@ -90,6 +90,8 @@ model Service {
   provider   User   @relation(fields: [providerId], references: [id])
   providerId String
 
+  contracts Contract[]
+
   @@map(name: "services")
 }
 
@@ -112,4 +114,12 @@ model Log {
   userProvider String   @map(name: "user_provider")
 
   @@map("log")
+}
+
+model Contract {
+  id        Int     @id @default(autoincrement())
+  service   Service @relation(fields: [serviceId], references: [id])
+  serviceId String
+
+  @@map("contract")
 }
