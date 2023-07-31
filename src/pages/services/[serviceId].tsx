@@ -40,6 +40,11 @@ export default function ServiceDetails() {
     if (serviceId) loadService();
   }, [serviceId]);
 
+  function handleContact() {
+    //TODO: need to log this click?
+    router.push(`/contracts/new/${service?.id}`);
+  }
+
   return (
     <Stack alignItems={"center"}>
       <Flex h="full" px="4" flexDir="column" w={["100%", 500]}>
@@ -71,7 +76,11 @@ export default function ServiceDetails() {
           <Text fontSize={"large"} fontWeight={"bold"} color={"blue.500"}>
             R$ {service?.value}
           </Text>
-          <Button colorScheme="green" leftIcon={<BsWhatsapp size={20} />}>
+          <Button
+            onClick={handleContact}
+            colorScheme="green"
+            leftIcon={<BsWhatsapp size={20} />}
+          >
             Contato
           </Button>
         </Stack>
