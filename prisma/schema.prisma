@@ -133,15 +133,15 @@ model Contract {
   userContractor   User?   @relation(name: "userContracts", fields: [userContractorId], references: [id])
   userContractorId String  @map("user_contractor_id")
 
-  createDate    DateTime @default(now()) @map("create_date")
-  dueDate       DateTime @map("due_date")
-  executionDate DateTime @map("execution_date")
-  closingDate   DateTime @map("closing_date")
+  createDate    DateTime  @default(now()) @map("create_date")
+  dueDate       DateTime? @map("due_date")
+  executionDate DateTime? @map("execution_date")
+  closingDate   DateTime? @map("closing_date")
 
-  serviceProvided  Boolean @map("service_provided")
-  serviceReviewed  Boolean @map("service_reviewd")
-  providerAgreed   Boolean @map("provider_agreed")
-  contractorAgreed Boolean @map("contractor_agreed")
+  serviceProvided  Boolean? @map("service_provided")
+  serviceReviewed  Boolean? @map("service_reviewd")
+  providerAgreed   Boolean? @map("provider_agreed")
+  contractorAgreed Boolean? @map("contractor_agreed")
 
   messages Message[]
   reviews  Review[]

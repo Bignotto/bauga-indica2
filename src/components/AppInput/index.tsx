@@ -18,6 +18,7 @@ export default function AppInput({ error, label, ...rest }: AppInputProps) {
         _hover={{
           borderColor: "blue.400",
         }}
+        borderRadius={"none"}
         {...rest}
       />
       <Flex w="100%" mt="-1.5" h="2">
