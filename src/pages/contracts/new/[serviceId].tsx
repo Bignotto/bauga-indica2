@@ -22,7 +22,6 @@ export default function NewContract() {
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
 
-  //NEXT: create new contract into database and create a contract-message page
   useEffect(() => {
     async function loadService() {
       try {
@@ -49,9 +48,13 @@ export default function NewContract() {
         userProviderId: service?.providerId,
         userContractorId: session?.userId,
         value: service?.value,
+        message,
       });
-      //NEXT: implement api route
-    } catch (error) {}
+
+      router.push(`/contracts/${newContractResponse.data.contractId}`);
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
   return (
