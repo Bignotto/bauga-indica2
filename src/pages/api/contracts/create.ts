@@ -5,6 +5,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<{ contractId: number } | null>
 ) {
+  if (req.method !== "POST") return res.status(405).send(null);
   const { serviceId, userProviderId, userContractorId, value, message } =
     req.body;
 

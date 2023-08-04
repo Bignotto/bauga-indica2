@@ -22,6 +22,7 @@ export default function ContractMessages() {
       service: Service;
     }
   >();
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const [message, setMessage] = useState("");
 
@@ -30,6 +31,7 @@ export default function ContractMessages() {
       try {
         const response = await api.get(`/contracts/${contractId}`);
         setContract(response.data);
+        setMessages(response.data.messages);
       } catch (error) {
         console.log({ error });
       }
@@ -39,6 +41,20 @@ export default function ContractMessages() {
   }, [contractId, router, status]);
 
   //NEXT: handle add new message
+  async function handleNewMessage() {
+    if (message.length === 0) return;
+    try {
+      const newMessageResponse = await api.post("/contracts/messages/create", {
+        contractId,
+        userFromId: session?.userId,
+        text: message,
+      });
+
+      const newMessages = messages.concat(newMessageResponse.data);
+      setMessages(newMessages);
+      setMessage("");
+    } catch (error) {}
+  }
 
   return (
     <Stack alignItems={"center"}>
@@ -69,7 +85,7 @@ export default function ContractMessages() {
         </Box>
 
         <Stack mt={"2"}>
-          {contract?.messages.map((m) => (
+          {messages.map((m) => (
             <Flex
               key={m.id}
               flexDir={"row"}
@@ -97,7 +113,11 @@ export default function ContractMessages() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
-            <Button colorScheme="green" isDisabled={message.length === 0}>
+            <Button
+              colorScheme="green"
+              isDisabled={message.length === 0}
+              onClick={handleNewMessage}
+            >
               Enviar mensagem
             </Button>
           </Stack>
