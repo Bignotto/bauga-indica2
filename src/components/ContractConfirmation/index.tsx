@@ -10,9 +10,20 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 
-export default function ContractConfirmation() {
+type ContractConfirmationProps = {
+  onConfirm(): void;
+};
+
+export default function ContractConfirmation({
+  onConfirm,
+}: ContractConfirmationProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef(null);
+
+  async function handleConfirmation() {
+    onConfirm();
+    onClose();
+  }
 
   return (
     <>
@@ -32,14 +43,14 @@ export default function ContractConfirmation() {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Tem certeza que quer aceitar os termos combinados
+              Tem certeza que quer aceitar os termos combinados?
             </AlertDialogBody>
 
             <AlertDialogFooter>
               <Button colorScheme={"gray"} ref={cancelRef} onClick={onClose}>
                 Não
               </Button>
-              <Button colorScheme="red" onClick={onClose} ml={3}>
+              <Button colorScheme={"green"} onClick={handleConfirmation} ml={3}>
                 Sim
               </Button>
             </AlertDialogFooter>

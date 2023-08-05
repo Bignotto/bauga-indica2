@@ -58,7 +58,7 @@ export default function ContractMessages() {
   }
 
   async function handleAcceptContract() {
-    setConfirmation(true);
+    console.log({ confirmation: "YES!" });
   }
 
   return (
@@ -128,7 +128,7 @@ export default function ContractMessages() {
               >
                 Enviar mensagem
               </Button>
-              <ContractConfirmation />
+              <ContractConfirmation onConfirm={handleAcceptContract} />
             </Stack>
           </Stack>
         </Flex>
