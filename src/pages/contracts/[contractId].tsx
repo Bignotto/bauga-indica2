@@ -9,24 +9,23 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/AuthContext";
 
+type AppContract = Contract & {
+  userProvider: User;
+  userContractor: User;
+  messages: Message[];
+  service: Service;
+};
+
 export default function ContractMessages() {
   const router = useRouter();
   const { status, session } = useAuth();
 
   const { contractId } = router.query;
 
-  const [contract, setContract] = useState<
-    Contract & {
-      userProvider: User;
-      userContractor: User;
-      messages: Message[];
-      service: Service;
-    }
-  >();
+  const [contract, setContract] = useState<AppContract>();
   const [messages, setMessages] = useState<Message[]>([]);
 
   const [message, setMessage] = useState("");
-  const [confirmation, setConfirmation] = useState(false);
 
   useEffect(() => {
     async function loadContract() {
@@ -58,7 +57,15 @@ export default function ContractMessages() {
   }
 
   async function handleAcceptContract() {
-    console.log({ confirmation: "YES!" });
+    try {
+      const response = await api.patch("/contracts/contractorAgreed", {
+        contractId,
+      });
+
+      setContract(response.data);
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
   return (
