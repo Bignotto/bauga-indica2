@@ -1,26 +1,26 @@
 import { prisma } from "@/database/prisma";
-import { Service } from "@prisma/client";
+import { Contract } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Service[] | null>
+  res: NextApiResponse<Contract[] | null>
 ) {
   if (req.method !== "GET") return res.status(405).send(null);
-  const { userId } = req.query;
+  const { providerId } = req.query;
 
   try {
-    const services = await prisma.service.findMany({
+    const contracts = await prisma.contract.findMany({
       where: {
-        providerId: `${userId}`,
+        userProviderId: `${providerId}`,
       },
       include: {
-        provider: true,
-        serviceType: true,
+        service: true,
       },
     });
-    if (!services) return res.status(404).send(null);
-    return res.status(200).send(services);
+
+    if (!contracts) return res.status(404).send(null);
+    return res.status(200).send(contracts);
   } catch (error) {
     return res.status(500).send(null);
   }
