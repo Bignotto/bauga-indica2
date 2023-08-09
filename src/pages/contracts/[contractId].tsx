@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { api } from "@/services/api";
 import { Box, Button, Flex, Stack, Text, Textarea } from "@chakra-ui/react";
 import { Contract, Message, Service, User } from "@prisma/client";
+import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/AuthContext";
@@ -25,7 +26,11 @@ export default function ContractMessages() {
   const [contract, setContract] = useState<AppContract>();
   const [messages, setMessages] = useState<Message[]>([]);
 
+  const [date, setDate] = useState(new Date());
+  const [value, setValue] = useState(0);
   const [message, setMessage] = useState("");
+
+  const minDate = new Date();
 
   useEffect(() => {
     async function loadContract() {
@@ -33,6 +38,8 @@ export default function ContractMessages() {
         const response = await api.get(`/contracts/${contractId}`);
         setContract(response.data);
         setMessages(response.data.messages);
+        setValue(response.data.value);
+        setDate(response.data.dueDate);
       } catch (error) {
         console.log({ error });
       }
@@ -87,13 +94,55 @@ export default function ContractMessages() {
             >
               {contract?.service?.title}
             </Text>
-            <Text fontSize={"sm"} p="2">
+            <Text fontSize={"sm"} p="2" color={"gray.600"}>
               {contract?.service?.description}
             </Text>
-            <Flex justifyContent={"flex-end"}>
-              <Text fontSize={"lg"} color={"blue.400"} fontWeight={"bold"}>
+            <Flex justifyContent={"space-between"}>
+              <Stack w={"50%"} p="2">
+                <Text fontSize={"sm"} mb="-1.5">
+                  Data do serviço:
+                </Text>
+                <SingleDatepicker
+                  //TODO: date picker: create a component with a better style
+                  configs={{
+                    dateFormat: "dd/MM/yyyy",
+                  }}
+                  minDate={minDate}
+                  name="date-input"
+                  date={date}
+                  onDateChange={setDate}
+                  propsConfigs={{
+                    dayOfMonthBtnProps: {
+                      defaultBtnProps: {
+                        colorScheme: "blue",
+                        borderColor: "gray.600",
+                        _hover: {
+                          background: "blue.100",
+                        },
+                      },
+                    },
+                    inputProps: {
+                      errorBorderColor: "crimson",
+                      borderColor: "gray.800",
+                      _hover: {
+                        borderColor: "blue.400",
+                      },
+                      borderRadius: "none",
+                    },
+                  }}
+                />
+              </Stack>
+              {/* <Text fontSize={"lg"} color={"blue.400"} fontWeight={"bold"}>
                 R$ {contract?.service?.value}
-              </Text>
+              </Text> */}
+              <Flex w="50%" p="2">
+                <AppInput
+                  error=""
+                  label="Valor do serviço"
+                  value={value}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </Flex>
             </Flex>
           </Box>
 
