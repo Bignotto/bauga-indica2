@@ -6,6 +6,7 @@ import { api } from "@/services/api";
 import { Box, Button, Flex, Stack, Text, Textarea } from "@chakra-ui/react";
 import { Contract, Message, Service, User } from "@prisma/client";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
+import { subDays } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/AuthContext";
@@ -30,7 +31,8 @@ export default function ContractMessages() {
   const [value, setValue] = useState(0);
   const [message, setMessage] = useState("");
 
-  const minDate = new Date();
+  const minDate = subDays(new Date(), 1);
+  //const minDate = new Date();
 
   useEffect(() => {
     async function loadContract() {
@@ -39,7 +41,7 @@ export default function ContractMessages() {
         setContract(response.data);
         setMessages(response.data.messages);
         setValue(response.data.value);
-        setDate(response.data.dueDate);
+        setDate(response.data.dueDate ?? new Date());
       } catch (error) {
         console.log({ error });
       }
@@ -132,9 +134,6 @@ export default function ContractMessages() {
                   }}
                 />
               </Stack>
-              {/* <Text fontSize={"lg"} color={"blue.400"} fontWeight={"bold"}>
-                R$ {contract?.service?.value}
-              </Text> */}
               <Flex w="50%" p="2">
                 <AppInput
                   error=""
