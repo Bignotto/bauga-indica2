@@ -15,7 +15,8 @@ export default async function handler(
         id: parseInt(`${contractId}`),
       },
       data: {
-        contractorAgreed: true,
+        serviceProvided: true,
+        contractStatus: "closed",
       },
       include: {
         userProvider: true,
@@ -24,24 +25,6 @@ export default async function handler(
         service: true,
       },
     });
-
-    if (contract.providerAgreed && contract.contractorAgreed) {
-      const executingContract = await prisma.contract.update({
-        where: {
-          id: parseInt(`${contractId}`),
-        },
-        data: {
-          contractStatus: "executing",
-        },
-        include: {
-          userProvider: true,
-          userContractor: true,
-          messages: true,
-          service: true,
-        },
-      });
-      return res.status(200).send(executingContract);
-    }
 
     return res.status(200).send(contract);
   } catch (error) {

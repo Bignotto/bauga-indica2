@@ -15,7 +15,7 @@ export default async function handler(
         id: parseInt(`${contractId}`),
       },
       data: {
-        contractorAgreed: true,
+        providerAgreed: true,
       },
       include: {
         userProvider: true,

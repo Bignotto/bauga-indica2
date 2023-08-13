@@ -32,7 +32,6 @@ export default function ContractMessages() {
   const [message, setMessage] = useState("");
 
   const minDate = subDays(new Date(), 1);
-  //const minDate = new Date();
 
   useEffect(() => {
     async function loadContract() {
