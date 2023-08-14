@@ -11,10 +11,12 @@ import {
 import React from "react";
 
 type ContractConfirmationProps = {
+  buttonText: string;
   onConfirm(): void;
 };
 
 export default function ContractConfirmation({
+  buttonText,
   onConfirm,
 }: ContractConfirmationProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,7 +30,7 @@ export default function ContractConfirmation({
   return (
     <>
       <Button colorScheme="green" onClick={onOpen}>
-        Aceitar contrato
+        {buttonText}
       </Button>
 
       <AlertDialog

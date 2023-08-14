@@ -9,6 +9,7 @@ import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { subDays } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { AiFillSave } from "react-icons/ai";
 import { useAuth } from "../../hooks/AuthContext";
 
 type AppContract = Contract & {
@@ -49,6 +50,18 @@ export default function ContractMessages() {
     if (contractId) loadContract();
   }, [contractId, router, status]);
 
+  async function handleSaveTerms() {
+    try {
+      const updatedResponse = await api.patch("/contracts/updateTerms", {
+        contractId,
+        dueDate: date,
+        value,
+      });
+
+      setContract(updatedResponse.data);
+    } catch (error) {}
+  }
+
   async function handleNewMessage() {
     if (message.length === 0) return;
     try {
@@ -66,7 +79,11 @@ export default function ContractMessages() {
 
   async function handleAcceptContract() {
     try {
-      const response = await api.patch("/contracts/contractorAgreed", {
+      const acceptPath =
+        session?.userId === contract?.service.providerId
+          ? "/contracts/providerAgreed"
+          : "/contracts/contractorAgreed";
+      const response = await api.patch(acceptPath, {
         contractId,
       });
 
@@ -99,7 +116,7 @@ export default function ContractMessages() {
               {contract?.service?.description}
             </Text>
             <Flex justifyContent={"space-between"}>
-              <Stack w={"50%"} p="2">
+              <Stack w={"45%"} p="2">
                 <Text fontSize={"sm"} mb="-1.5">
                   Data do serviço:
                 </Text>
@@ -110,6 +127,7 @@ export default function ContractMessages() {
                   }}
                   minDate={minDate}
                   name="date-input"
+                  //NEXT: fix time format or remove time completely from date
                   date={date}
                   onDateChange={setDate}
                   propsConfigs={{
@@ -133,13 +151,24 @@ export default function ContractMessages() {
                   }}
                 />
               </Stack>
-              <Flex w="50%" p="2">
-                <AppInput
-                  error=""
-                  label="Valor do serviço"
-                  value={value}
-                  onChange={(e) => setMessage(e.target.value)}
-                />
+              <Flex w="55%" p="2">
+                <Flex flexDir={"row"} alignItems={"flex-end"}>
+                  <AppInput
+                    error=""
+                    label="Valor"
+                    value={value}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                  <Flex mb="2.5" ml="2">
+                    <Button
+                      colorScheme="teal"
+                      borderRadius={"none"}
+                      onClick={handleSaveTerms}
+                    >
+                      <AiFillSave size={16} />
+                    </Button>
+                  </Flex>
+                </Flex>
               </Flex>
             </Flex>
           </Box>
@@ -182,7 +211,10 @@ export default function ContractMessages() {
               >
                 Enviar mensagem
               </Button>
-              <ContractConfirmation onConfirm={handleAcceptContract} />
+              <ContractConfirmation
+                buttonText="Combinado!"
+                onConfirm={handleAcceptContract}
+              />
             </Stack>
           </Stack>
         </Flex>
