@@ -32,18 +32,28 @@ export default function ContractMessages() {
   const [value, setValue] = useState(0);
   const [message, setMessage] = useState("");
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const minDate = subDays(new Date(), 1);
 
   useEffect(() => {
     async function loadContract() {
       try {
+        setIsLoading(true);
         const response = await api.get(`/contracts/${contractId}`);
         setContract(response.data);
         setMessages(response.data.messages);
         setValue(response.data.value);
         setDate(response.data.dueDate ?? new Date());
+
+        console.log({
+          message: "the wrong date",
+          date: response.data.dueDate,
+        });
       } catch (error) {
         console.log({ error });
+      } finally {
+        setIsLoading(false);
       }
     }
     if (status === "unauthenticated") router.push("/");
@@ -128,7 +138,7 @@ export default function ContractMessages() {
                   minDate={minDate}
                   name="date-input"
                   //NEXT: fix time format or remove time completely from date
-                  date={date}
+                  //date={new Date(parseISO(date.toUTCString()))}
                   onDateChange={setDate}
                   propsConfigs={{
                     dayOfMonthBtnProps: {
