@@ -3,13 +3,21 @@ import AppLogo from "@/components/AppLogo";
 import ContractConfirmation from "@/components/ContractConfirmation";
 import Header from "@/components/Header";
 import { api } from "@/services/api";
-import { Box, Button, Flex, Stack, Text, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Spinner,
+  Stack,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import { Contract, Message, Service, User } from "@prisma/client";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { subDays } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { AiFillSave } from "react-icons/ai";
+import { HiClipboardCheck } from "react-icons/hi";
 import { useAuth } from "../../hooks/AuthContext";
 
 type AppContract = Contract & {
@@ -28,7 +36,7 @@ export default function ContractMessages() {
   const [contract, setContract] = useState<AppContract>();
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState<Date>(new Date());
   const [value, setValue] = useState(0);
   const [message, setMessage] = useState("");
 
@@ -61,6 +69,7 @@ export default function ContractMessages() {
   }, [contractId, router, status]);
 
   async function handleSaveTerms() {
+    setIsLoading(true);
     try {
       const updatedResponse = await api.patch("/contracts/updateTerms", {
         contractId,
@@ -69,11 +78,16 @@ export default function ContractMessages() {
       });
 
       setContract(updatedResponse.data);
-    } catch (error) {}
+    } catch (error) {
+      console.log({ error });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function handleNewMessage() {
     if (message.length === 0) return;
+    setIsLoading(true);
     try {
       const newMessageResponse = await api.post("/contracts/messages/create", {
         contractId,
@@ -84,11 +98,16 @@ export default function ContractMessages() {
       const newMessages = messages.concat(newMessageResponse.data);
       setMessages(newMessages);
       setMessage("");
-    } catch (error) {}
+    } catch (error) {
+      console.log({ error });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function handleAcceptContract() {
     try {
+      setIsLoading(true);
       const acceptPath =
         session?.userId === contract?.service.providerId
           ? "/contracts/providerAgreed"
@@ -100,6 +119,27 @@ export default function ContractMessages() {
       setContract(response.data);
     } catch (error) {
       console.log({ error });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleExecuteContract() {
+    try {
+      setIsLoading(true);
+      const acceptPath =
+        session?.userId === contract?.service.providerId
+          ? "/contracts/providerAgreed"
+          : "/contracts/contractorAgreed";
+      const response = await api.patch(acceptPath, {
+        contractId,
+      });
+
+      setContract(response.data);
+    } catch (error) {
+      console.log({ error });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -137,8 +177,7 @@ export default function ContractMessages() {
                   }}
                   minDate={minDate}
                   name="date-input"
-                  //NEXT: fix time format or remove time completely from date
-                  //date={new Date(parseISO(date.toUTCString()))}
+                  date={new Date(date)}
                   onDateChange={setDate}
                   propsConfigs={{
                     dayOfMonthBtnProps: {
@@ -151,6 +190,7 @@ export default function ContractMessages() {
                       },
                     },
                     inputProps: {
+                      isDisabled: session?.userId !== contract?.userProviderId,
                       errorBorderColor: "crimson",
                       borderColor: "gray.800",
                       _hover: {
@@ -168,14 +208,19 @@ export default function ContractMessages() {
                     label="Valor"
                     value={value}
                     onChange={(e) => setMessage(e.target.value)}
+                    isDisabled={session?.userId !== contract?.userProviderId}
                   />
                   <Flex mb="2.5" ml="2">
                     <Button
                       colorScheme="teal"
-                      borderRadius={"none"}
                       onClick={handleSaveTerms}
+                      isDisabled={session?.userId !== contract?.userProviderId}
                     >
-                      <AiFillSave size={16} />
+                      {isLoading ? (
+                        <Spinner size={"sm"} />
+                      ) : (
+                        <HiClipboardCheck size={16} />
+                      )}
                     </Button>
                   </Flex>
                 </Flex>
@@ -222,9 +267,26 @@ export default function ContractMessages() {
                 Enviar mensagem
               </Button>
               <ContractConfirmation
-                buttonText="Combinado!"
+                buttonText={"Combinado!"}
+                messageText="Tem certeza que quer aceitar os termos combinados?"
                 onConfirm={handleAcceptContract}
+                isLoading={isLoading}
+                isDisabled={
+                  session?.userId === contract?.userContractorId
+                    ? //contratante
+                      !!contract?.contractorAgreed
+                    : //contratado
+                      !!contract?.providerAgreed
+                }
               />
+              {contract?.contractStatus === "executing" && (
+                <ContractConfirmation
+                  buttonText="Executar!"
+                  messageText="Confirma a execução e pagamento do serviço combinado?"
+                  isLoading={isLoading}
+                  onConfirm={handleExecuteContract}
+                />
+              )}
             </Stack>
           </Stack>
         </Flex>

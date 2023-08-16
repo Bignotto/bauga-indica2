@@ -6,17 +6,24 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
 
 type ContractConfirmationProps = {
   buttonText: string;
+  messageText: string;
+  isDisabled?: boolean;
+  isLoading?: boolean;
   onConfirm(): void;
 };
 
 export default function ContractConfirmation({
   buttonText,
+  messageText,
+  isDisabled = false,
+  isLoading = false,
   onConfirm,
 }: ContractConfirmationProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,8 +36,8 @@ export default function ContractConfirmation({
 
   return (
     <>
-      <Button colorScheme="green" onClick={onOpen}>
-        {buttonText}
+      <Button colorScheme="green" onClick={onOpen} isDisabled={isDisabled}>
+        {isLoading ? <Spinner size={"sm"} /> : <>{buttonText}</>}
       </Button>
 
       <AlertDialog
@@ -44,9 +51,7 @@ export default function ContractConfirmation({
               Confirma
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              Tem certeza que quer aceitar os termos combinados?
-            </AlertDialogBody>
+            <AlertDialogBody>{messageText}</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button colorScheme={"gray"} ref={cancelRef} onClick={onClose}>
