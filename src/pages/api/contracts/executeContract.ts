@@ -17,6 +17,7 @@ export default async function handler(
       data: {
         serviceProvided: true,
         contractStatus: "closed",
+        executionDate: new Date(),
       },
       include: {
         userProvider: true,

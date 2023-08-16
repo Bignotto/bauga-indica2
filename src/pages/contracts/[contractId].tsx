@@ -127,11 +127,7 @@ export default function ContractMessages() {
   async function handleExecuteContract() {
     try {
       setIsLoading(true);
-      const acceptPath =
-        session?.userId === contract?.service.providerId
-          ? "/contracts/providerAgreed"
-          : "/contracts/contractorAgreed";
-      const response = await api.patch(acceptPath, {
+      const response = await api.patch("/contracts/executeContract", {
         contractId,
       });
 
@@ -156,7 +152,7 @@ export default function ContractMessages() {
             <Text
               fontSize={"md"}
               fontWeight={"bold"}
-              bg={"green.600"}
+              bg={contract?.contractorAgreed ? "green.600" : "orange.300"}
               color={"white"}
               px="1"
             >
@@ -287,6 +283,12 @@ export default function ContractMessages() {
                   onConfirm={handleExecuteContract}
                 />
               )}
+              {session?.userId === contract?.userContractorId &&
+                contract?.contractStatus === "closed" &&
+                !contract.serviceReviewed && (
+                  //NEXT: navigate to write review page
+                  <Button>Escreva uma avaliação!</Button>
+                )}
             </Stack>
           </Stack>
         </Flex>
