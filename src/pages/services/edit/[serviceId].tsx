@@ -211,5 +211,3 @@ export default function EditService() {
     </Stack>
   );
 }
-
-//NEXT: save to database

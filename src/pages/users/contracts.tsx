@@ -1,8 +1,8 @@
 import Header from "@/components/Header";
-import ServiceCard from "@/components/ServiceCard";
 import { api } from "@/services/api";
 import {
   Box,
+  Flex,
   HStack,
   Heading,
   Radio,
@@ -10,14 +10,14 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Service, ServiceType, User } from "@prisma/client";
+import { Contract, Service, ServiceType, User } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/AuthContext";
 
-export default function Services() {
+export default function Contracts() {
   const { session } = useAuth();
 
-  const [filterSelected, setFilterSelected] = useState("all");
+  const [filterSelected, setFilterSelected] = useState("active");
   const [servicesList, setServicesList] = useState<
     (Service & {
       provider: User;
@@ -25,23 +25,29 @@ export default function Services() {
     })[]
   >();
 
+  const [contractsList, setContractList] = useState<
+    (Contract & {
+      service: Service;
+    })[]
+  >();
+
   useEffect(() => {
-    async function loadUserServices() {
+    async function loadContracts() {
       try {
-        const response = await api.get(`users/services/${session?.userId}`);
-        setServicesList(response.data);
+        const response = await api.get(`users/contracts/${session?.userId}`);
+        setContractList(response.data);
       } catch (error) {
         console.log({ error });
       }
     }
-    loadUserServices();
+    loadContracts();
   }, [session?.userId]);
 
   return (
     <Stack alignItems="center" h="full" mt="4">
       <Stack w={["100%", 500]} px="4">
         <Header />
-        <Heading>Meus serviços</Heading>
+        <Heading>Meus contratos</Heading>
         <Box bg="gray.100" p="2">
           <Text>Filtrar anúncios</Text>
           <RadioGroup
@@ -63,14 +69,11 @@ export default function Services() {
           </RadioGroup>
         </Box>
         <Stack>
-          {servicesList?.map((service) => (
-            <ServiceCard
-              key={service.id}
-              serviceRating={5}
-              serviceObject={service}
-              //make this optional
-              searchedTerms=""
-            />
+          {contractsList?.map((contract) => (
+            <Flex key={contract.id}>
+              <Text>Contract {contract.id}</Text>
+              <Text>Service: {contract.service.title}</Text>
+            </Flex>
           ))}
         </Stack>
       </Stack>

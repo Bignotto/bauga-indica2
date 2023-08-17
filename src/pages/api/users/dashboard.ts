@@ -33,9 +33,13 @@ export default async function handler(
     },
   });
 
+  const messages = await prisma.contract.count({
+    where: { userProviderId: user!.id },
+  });
+
   const dashboardProps: DashboardProps = {
     servicesCount: user!.services.length,
-    messagesCount: 0,
+    messagesCount: messages,
     visualizationsCount: clicks.length,
   };
 

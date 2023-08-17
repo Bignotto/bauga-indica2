@@ -68,6 +68,11 @@ model User {
   sessions  Session[]
   services  Service[]
 
+  providerContracts Contract[] @relation("providerContracts")
+  userContracts     Contract[] @relation("userContracts")
+
+  contractMessages Message[]
+
   @@map(name: "users")
 }
 
@@ -89,6 +94,8 @@ model Service {
 
   provider   User   @relation(fields: [providerId], references: [id])
   providerId String
+
+  contracts Contract[]
 
   @@map(name: "services")
 }
@@ -112,4 +119,62 @@ model Log {
   userProvider String   @map(name: "user_provider")
 
   @@map("log")
+}
+
+model Contract {
+  id             Int    @id @default(autoincrement())
+  contractStatus String @default("open") @map("contract_status")
+  value          Int
+
+  service          Service @relation(fields: [serviceId], references: [id])
+  serviceId        String  @map("service_id")
+  userProvider     User?   @relation(name: "providerContracts", fields: [userProviderId], references: [id])
+  userProviderId   String  @map("user_provider_id")
+  userContractor   User?   @relation(name: "userContracts", fields: [userContractorId], references: [id])
+  userContractorId String  @map("user_contractor_id")
+
+  createDate    DateTime  @default(now()) @map("create_date")
+  dueDate       DateTime? @map("due_date")
+  executionDate DateTime? @map("execution_date")
+  closingDate   DateTime? @map("closing_date")
+
+  serviceProvided  Boolean? @map("service_provided")
+  serviceReviewed  Boolean? @map("service_reviewd")
+  providerAgreed   Boolean? @map("provider_agreed")
+  contractorAgreed Boolean? @map("contractor_agreed")
+
+  messages Message[]
+  reviews  Review[]
+
+  @@map("contract")
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+
+  contract   Contract @relation(fields: [contractId], references: [id])
+  contractId Int
+
+  userFrom   User   @relation(fields: [userFromId], references: [id])
+  userFromId String
+
+  messageDate DateTime
+  text        String
+  messageRead Boolean
+
+  @@map("message")
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+
+  contract   Contract @relation(fields: [contractId], references: [id])
+  contractId Int
+
+  title      String
+  text       String
+  reviewDate DateTime
+  score      Int
+
+  @@map("review")
 }
