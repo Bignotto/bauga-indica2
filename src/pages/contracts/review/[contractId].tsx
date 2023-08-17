@@ -1,7 +1,16 @@
+import AppInput from "@/components/AppInput";
 import AppLogo from "@/components/AppLogo";
 import Header from "@/components/Header";
 import { api } from "@/services/api";
-import { Flex, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Skeleton,
+  Stack,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import { Contract, Service, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -20,10 +29,6 @@ export default function ContractMessages() {
   const { contractId } = router.query;
 
   const [contract, setContract] = useState<AppContract>();
-
-  const [date, setDate] = useState<Date>(new Date());
-  const [value, setValue] = useState(0);
-  const [message, setMessage] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,11 +49,30 @@ export default function ContractMessages() {
   }, [contractId, router, status]);
 
   return (
+    //NEXT: style review page
     <Stack alignItems={"center"}>
       <Flex p={"4"} flexDir={"column"} w={["100%", 500]}>
         <Header />
         <Flex alignItems="center" justifyContent="space-between" my="4">
           <AppLogo size="sm" />
+        </Flex>
+        <Heading>Avaliação</Heading>
+        <Skeleton isLoaded={!isLoading}>
+          <Box bg="blue.200">
+            <Text>Avalie o serviço de {contract?.userProvider.name}.</Text>
+            <Flex>
+              <Text>{contract?.service.title}</Text>
+              <Text>{contract?.service.description}</Text>
+            </Flex>
+          </Box>
+        </Skeleton>
+        <Flex bg="green.200" flexDir={"column"}>
+          <AppInput error="" label="Diga o que achou do serviço:" />
+          <AppInput
+            as={Textarea}
+            error=""
+            label="Conte tudo sobre o serviço prestado:"
+          />
         </Flex>
       </Flex>
     </Stack>

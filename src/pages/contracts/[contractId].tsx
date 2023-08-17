@@ -275,19 +275,25 @@ export default function ContractMessages() {
                       !!contract?.providerAgreed
                 }
               />
-              {contract?.contractStatus === "executing" && (
-                <ContractConfirmation
-                  buttonText="Executar!"
-                  messageText="Confirma a execução e pagamento do serviço combinado?"
-                  isLoading={isLoading}
-                  onConfirm={handleExecuteContract}
-                />
-              )}
+              {contract?.contractStatus === "executing" &&
+                session?.userId === contract?.userProviderId && (
+                  <ContractConfirmation
+                    buttonText="Executar!"
+                    messageText="Confirma a execução e pagamento do serviço combinado?"
+                    isLoading={isLoading}
+                    onConfirm={handleExecuteContract}
+                  />
+                )}
               {session?.userId === contract?.userContractorId &&
                 contract?.contractStatus === "closed" &&
                 !contract.serviceReviewed && (
-                  //NEXT: navigate to write review page
-                  <Button>Escreva uma avaliação!</Button>
+                  <Button
+                    onClick={() => {
+                      router.push(`/contracts/review/${contractId}`);
+                    }}
+                  >
+                    Escreva uma avaliação!
+                  </Button>
                 )}
             </Stack>
           </Stack>
