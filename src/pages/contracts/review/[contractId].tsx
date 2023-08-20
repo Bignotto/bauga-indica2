@@ -78,13 +78,18 @@ export default function ContractMessages() {
     }
     setScoreError("");
 
-    //NEXT: save review to database
-    console.log({
-      text,
-      title,
-      score,
-      message: "everything fine with the form!",
-    });
+    try {
+      const response = await api.post("/contracts/review/create", {
+        contractId,
+        title,
+        text,
+        score,
+      });
+
+      if (response.status === 200) router.push(`contracts/${contractId}`);
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
   return (
