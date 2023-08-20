@@ -12,13 +12,28 @@ export default async function handler(
   try {
     const review = await prisma.review.create({
       data: {
-        contractId,
         title,
         text,
         score,
         reviewDate: new Date(),
+        contract: {
+          connect: {
+            id: parseInt(contractId),
+          },
+        },
       },
     });
+
+    if (review) {
+      const updatedContract = await prisma.contract.update({
+        where: {
+          id: parseInt(contractId),
+        },
+        data: {
+          serviceReviewed: true,
+        },
+      });
+    }
     res.status(200).send(review);
   } catch (error) {
     console.log({ error });

@@ -86,7 +86,7 @@ export default function ContractMessages() {
         score,
       });
 
-      if (response.status === 200) router.push(`contracts/${contractId}`);
+      if (response.status === 200) router.push(`/contracts/${contractId}`);
     } catch (error) {
       console.log({ error });
     }
