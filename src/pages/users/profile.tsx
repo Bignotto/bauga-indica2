@@ -76,7 +76,7 @@ export default function Profile() {
         setValue("email", response.data.email ?? "");
         setValue("phone", response.data.phone ?? "");
         setAvatarPath(response.data.image ?? "");
-        console.log("loaded user again");
+        console.log({ user: response.data });
       } catch (error) {
         console.log({ error });
       } finally {
@@ -108,6 +108,7 @@ export default function Profile() {
   async function handleAvatarSelect(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     if (!e.target.files || e.target.files[0] === undefined) return;
+    console.log({ porra: e.target.files[0] });
     try {
       const { data, error } = await supabase.storage
         .from("images_avatars")
@@ -116,12 +117,16 @@ export default function Profile() {
         });
 
       const updateResponse = await api.patch("/users/updateImage", {
-        image: `${process.env.NEXT_PUBLIC_SUPABASEURL}/storage/v1/object/public/images_avatars/${e.target.files[0].name}`,
+        image: `${
+          process.env.NEXT_PUBLIC_SUPABASEURL
+        }/storage/v1/object/public/images_avatars/${userProfile?.id!}`,
         userId: userProfile?.id,
       });
 
       setAvatarPath(
-        `${process.env.NEXT_PUBLIC_SUPABASEURL}/storage/v1/object/public/images_avatars/${e.target.files[0].name}`
+        `${
+          process.env.NEXT_PUBLIC_SUPABASEURL
+        }/storage/v1/object/public/images_avatars/${userProfile?.id!}`
       );
     } catch (error) {
       console.log({ error });
