@@ -168,12 +168,12 @@ model Message {
 model Review {
   id Int @id @default(autoincrement())
 
-  contract   Contract @relation(fields: [contractId], references: [id])
-  contractId Int
+  contract   Contract? @relation(fields: [contractId], references: [id])
+  contractId Int       @map("contract_id")
 
   title      String
   text       String
-  reviewDate DateTime
+  reviewDate DateTime @default(now()) @map("review_date")
   score      Int
 
   @@map("review")

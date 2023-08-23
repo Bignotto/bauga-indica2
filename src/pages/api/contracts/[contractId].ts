@@ -18,6 +18,7 @@ export default async function handler(
       userContractor: true,
       messages: true,
       service: true,
+      reviews: true,
     },
   });
 
