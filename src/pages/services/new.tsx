@@ -84,7 +84,6 @@ export default function NewService() {
       });
 
       if (response.status === 201) router.push("/dashboard");
-      console.log({ response });
     } catch (error) {
       console.log({ error });
     }

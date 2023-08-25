@@ -8,7 +8,6 @@ export default async function handler(
   const { phoneNumber } = req.body;
   const method = req.method;
 
-  console.log({ phoneNumber });
   if (method === "PATCH") {
     try {
       const result = await prisma.user.update({

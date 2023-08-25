@@ -69,6 +69,9 @@ export default function Profile() {
 
   useEffect(() => {
     async function loadUserProfile() {
+      //BIG: bug when load profile page with no session.email value, it generates a 404 error
+      if (!session?.email) return;
+
       try {
         const response = await api.get(`users/${session?.email}`);
         setUserProfile(response.data);
@@ -76,7 +79,6 @@ export default function Profile() {
         setValue("email", response.data.email ?? "");
         setValue("phone", response.data.phone ?? "");
         setAvatarPath(response.data.image ?? "");
-        console.log({ user: response.data });
       } catch (error) {
         console.log({ error });
       } finally {
