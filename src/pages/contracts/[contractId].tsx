@@ -6,6 +6,7 @@ import { api } from "@/services/api";
 import {
   Box,
   Button,
+  Center,
   Flex,
   Spinner,
   Stack,
@@ -54,11 +55,6 @@ export default function ContractMessages() {
         setMessages(response.data.messages);
         setValue(response.data.value);
         setDate(response.data.dueDate ?? new Date());
-
-        console.log({
-          message: "the wrong date",
-          date: response.data.dueDate,
-        });
       } catch (error) {
         console.log({ error });
       } finally {
@@ -226,26 +222,34 @@ export default function ContractMessages() {
           </Box>
 
           <Stack mt={"2"}>
-            {messages.map((m) => (
-              <Flex
-                key={m.id}
-                flexDir={"row"}
-                justifyContent={
-                  session?.userId === m.userFromId ? "flex-end" : "flex-start"
-                }
-              >
+            {isLoading ? (
+              <Center>
+                <Spinner size={"sm"} />
+              </Center>
+            ) : (
+              messages.map((m) => (
                 <Flex
-                  bg={
-                    session?.userId === m.userFromId ? "green.100" : "gray.200"
+                  key={m.id}
+                  flexDir={"row"}
+                  justifyContent={
+                    session?.userId === m.userFromId ? "flex-end" : "flex-start"
                   }
-                  w={"80%"}
                 >
-                  <Text fontSize={"sm"} p={"2"}>
-                    {m.text}
-                  </Text>
+                  <Flex
+                    bg={
+                      session?.userId === m.userFromId
+                        ? "green.100"
+                        : "gray.200"
+                    }
+                    w={"80%"}
+                  >
+                    <Text fontSize={"sm"} p={"2"}>
+                      {m.text}
+                    </Text>
+                  </Flex>
                 </Flex>
-              </Flex>
-            ))}
+              ))
+            )}
             <Stack mt="2">
               <AppInput
                 as={Textarea}

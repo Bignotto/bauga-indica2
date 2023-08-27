@@ -28,6 +28,7 @@ type AuthContextData = {
   appSignOut(): Promise<void>;
   status: "authenticated" | "loading" | "unauthenticated";
   session: SessionUser | undefined;
+  sessionLoading: boolean;
 };
 
 const AuthContext = createContext({} as AuthContextData);
@@ -49,6 +50,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     async function loadUserProfile() {
+      setIsLoading(true);
       try {
         const response = await api.get(`users/${session?.user?.email}`);
         setUserProfile(response.data);
@@ -89,6 +91,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         appSignIn,
         appSignOut,
         status,
+        sessionLoading: isLoading,
         session: {
           email: userProfile?.email ?? "",
           name: userProfile?.name ?? "",
