@@ -227,7 +227,7 @@ export default function ContractMessages() {
                 <Spinner size={"sm"} />
               </Center>
             ) : (
-              messages.map((m) => (
+              messages?.map((m) => (
                 <Flex
                   key={m.id}
                   flexDir={"row"}
@@ -305,7 +305,7 @@ export default function ContractMessages() {
                   <Spinner size={"sm"} />
                 </Center>
               ) : (
-                contract?.reviews.map((r) => (
+                contract?.reviews?.map((r) => (
                   <>
                     <Box bg="yellow.200" mt="4">
                       <Text>{r.title}</Text>
