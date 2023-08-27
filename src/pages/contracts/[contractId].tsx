@@ -300,14 +300,20 @@ export default function ContractMessages() {
                     Escreva uma avaliação!
                   </Button>
                 )}
-              {contract?.reviews.map((r) => (
-                <>
-                  <Box bg="yellow.200" mt="4">
-                    <Text>{r.title}</Text>
-                    <Text>{r.text}</Text>
-                  </Box>
-                </>
-              ))}
+              {isLoading ? (
+                <Center>
+                  <Spinner size={"sm"} />
+                </Center>
+              ) : (
+                contract?.reviews.map((r) => (
+                  <>
+                    <Box bg="yellow.200" mt="4">
+                      <Text>{r.title}</Text>
+                      <Text>{r.text}</Text>
+                    </Box>
+                  </>
+                ))
+              )}
             </Stack>
           </Stack>
         </Flex>
