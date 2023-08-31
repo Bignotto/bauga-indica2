@@ -18,6 +18,9 @@ export default async function handler(
         service: true,
         userContractor: true,
       },
+      orderBy: {
+        executionDate: "desc",
+      },
     });
 
     if (!contracts) return res.status(404).send(null);
