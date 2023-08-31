@@ -13,8 +13,9 @@ import { api } from "@/services/api";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { GiToolbox } from "react-icons/gi";
+import { IoBriefcase } from "react-icons/io5";
 import { LuMousePointerClick } from "react-icons/lu";
-import { MdAdd, MdMessage, MdOutlineArrowRightAlt } from "react-icons/md";
+import { MdAdd, MdOutlineArrowRightAlt } from "react-icons/md";
 import { useAuth } from "../hooks/AuthContext";
 
 export default function Dashboard() {
@@ -23,7 +24,7 @@ export default function Dashboard() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [adsCount, setAdsCount] = useState(0);
-  const [messagesCount, setMessagesCount] = useState(0);
+  const [contractsCount, setContractsCount] = useState(0);
   const [clicksCount, setClicksCount] = useState(0);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function Dashboard() {
       try {
         const response = await api.get("users/dashboard");
         setAdsCount(response.data.servicesCount);
-        setMessagesCount(response.data.messagesCount);
+        setContractsCount(response.data.messagesCount);
         setClicksCount(response.data.visualizationsCount);
       } catch (error) {
         console.log({ error });
@@ -121,7 +122,7 @@ export default function Dashboard() {
             alignItems={"center"}
           >
             <HStack>
-              <MdMessage size={38} />
+              <IoBriefcase size={38} />
               <Flex
                 flexDir={"column"}
                 justifyContent={"center"}
@@ -130,14 +131,19 @@ export default function Dashboard() {
                 ml={"2"}
               >
                 <Text fontSize={"x-large"} fontWeight={"bold"} mb={"-1.5"}>
-                  {messagesCount}
+                  {contractsCount}
                 </Text>
-                <Text>mensagens</Text>
+                <Text>contratos</Text>
               </Flex>
             </HStack>
             <HStack>
-              <Link as={NextLink} href="" fontSize={"xs"} fontWeight={"bold"}>
-                Ver mensagens
+              <Link
+                as={NextLink}
+                href="/contracts"
+                fontSize={"xs"}
+                fontWeight={"bold"}
+              >
+                Ver contratos
               </Link>
               <MdOutlineArrowRightAlt size={30} />
             </HStack>
