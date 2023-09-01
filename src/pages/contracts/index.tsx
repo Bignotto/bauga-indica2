@@ -10,7 +10,7 @@ import { useAuth } from "../../hooks/AuthContext";
 
 export default function Contracts() {
   const router = useRouter();
-  const { status, session } = useAuth();
+  const { status, session, sessionLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   const [contracts, setContracts] = useState<
@@ -21,7 +21,8 @@ export default function Contracts() {
   >();
 
   useEffect(() => {
-    async function loadDashboardProps() {
+    async function loadContracts() {
+      if (sessionLoading) return;
       try {
         const response = await api.get(`users/contracts/${session?.userId}`);
         setContracts(response.data);
@@ -32,7 +33,7 @@ export default function Contracts() {
       }
     }
     if (status === "unauthenticated") router.push("/");
-    if (status === "authenticated") loadDashboardProps();
+    if (status === "authenticated") loadContracts();
   }, [router, status]);
 
   return (
@@ -51,6 +52,10 @@ export default function Contracts() {
               key={contract.id}
               contractId={contract.id}
               contractStatus={contract.contractStatus}
+              contractorAgreed={contract.contractorAgreed}
+              contractorImage={contract.userContractor.image!}
+              contractorName={contract.userContractor.name!}
+              serviceTitle={contract.service.title}
             />
           ))
         )}
