@@ -17,6 +17,8 @@ export default async function handler(
       include: {
         service: true,
         userContractor: true,
+        messages: true,
+        reviews: true,
       },
       orderBy: {
         executionDate: "desc",

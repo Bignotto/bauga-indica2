@@ -3,7 +3,7 @@ import ContractCard from "@/components/ContractCard";
 import Header from "@/components/Header";
 import { api } from "@/services/api";
 import { Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
-import { Contract, Service, User } from "@prisma/client";
+import { Contract, Message, Review, Service, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/AuthContext";
@@ -17,6 +17,8 @@ export default function Contracts() {
     (Contract & {
       service: Service;
       userContractor: User;
+      messages: Message[];
+      reviews: Review[];
     })[]
   >();
 
@@ -48,15 +50,9 @@ export default function Contracts() {
           <Spinner />
         ) : (
           contracts?.map((contract) => (
-            <ContractCard
-              key={contract.id}
-              contractId={contract.id}
-              contractStatus={contract.contractStatus}
-              contractorAgreed={contract.contractorAgreed}
-              contractorImage={contract.userContractor.image!}
-              contractorName={contract.userContractor.name!}
-              serviceTitle={contract.service.title}
-            />
+            <Flex key={contract.id} mt="2">
+              <ContractCard contract={contract} />
+            </Flex>
           ))
         )}
       </Flex>

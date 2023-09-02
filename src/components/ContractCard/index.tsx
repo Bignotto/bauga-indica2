@@ -1,41 +1,125 @@
-import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Link, Text, theme } from "@chakra-ui/react";
+import { Contract, Message, Review, Service, User } from "@prisma/client";
+import { format } from "date-fns";
+import NextLink from "next/link";
 import { FiExternalLink } from "react-icons/fi";
+import { MdFileDownloadDone, MdMessage, MdStar } from "react-icons/md";
+import { RiToolsFill } from "react-icons/ri";
+import { TbCalendar } from "react-icons/tb";
 
 type ContractCardProps = {
-  contractId: number;
-  contractStatus: string;
-  contractorAgreed: boolean | null;
-  contractorImage: string;
-  serviceTitle: string;
-  contractorName: string;
+  contract: Contract & {
+    service: Service;
+    userContractor: User;
+    messages: Message[];
+    reviews: Review[];
+  };
 };
 
-export default function ContractCard({
-  contractId,
-  contractStatus,
-  contractorAgreed,
-  contractorImage,
-  serviceTitle,
-  contractorName,
-}: ContractCardProps) {
+export default function ContractCard({ contract }: ContractCardProps) {
   return (
-    <Box bg="gray.200" w={"100%"}>
+    <Box bg="gray.200" w={"100%"} p="1">
       <Flex flexDirection={"row"}>
         <Avatar
-          name={contractorName}
-          src={contractorImage}
+          name={`${contract.userContractor.name}`}
+          src={`${contract.userContractor.image}`}
           bg="teal.500"
           size={"md"}
         />
-        <Box w="100%" bg={contractorAgreed ? "green.600" : "gray.700"}>
-          <Text color={"white"}>{serviceTitle}</Text>
-        </Box>
+        <Flex flexDir={"column"} w="100%" ml="2" mr="1">
+          <Text
+            pl={"1"}
+            fontSize={"sm"}
+            fontWeight={"bold"}
+            color={"white"}
+            bg={contract.contractorAgreed ? "green.600" : "gray.700"}
+          >
+            {contract.service.title}
+          </Text>
+          <Flex justifyContent={"space-between"} mt="1.5">
+            <Flex flexDir={"row"} alignItems={"center"}>
+              <Text
+                fontSize={["xx-small", "xs"]}
+                fontFamily={"sans-serif"}
+                fontWeight={"bold"}
+                color={"gray.700"}
+                noOfLines={1}
+              >
+                {contract.userContractor.name}
+              </Text>
+            </Flex>
+            <Flex flexDir={"row"} alignItems={"center"}>
+              <TbCalendar color={theme.colors.gray[700]} />
+              <Text
+                fontSize={["xx-small", "xs"]}
+                fontFamily={"sans-serif"}
+                fontWeight={"bold"}
+                color={"gray.700"}
+              >
+                {format(new Date(contract.createDate), "dd/MM/yyyy")}
+              </Text>
+            </Flex>
+            <Flex flexDir={"row"} alignItems={"center"} w={"33%"}>
+              <RiToolsFill color={theme.colors.gray[700]} />
+              <Text
+                fontSize={["xx-small", "xs"]}
+                fontFamily={"sans-serif"}
+                fontWeight={"bold"}
+                color={"gray.700"}
+              >
+                {contract.dueDate
+                  ? format(new Date(contract.dueDate!), "dd/MM/yyyy")
+                  : `--/--/---`}
+              </Text>
+            </Flex>
+            <Flex flexDir={"row"} alignItems={"center"}>
+              {contract.serviceProvided && (
+                <MdFileDownloadDone color={theme.colors.gray[700]} />
+              )}
+            </Flex>
+            <Flex flexDir={"row"} alignItems={"center"}>
+              {contract.serviceReviewed && (
+                <>
+                  <MdStar color={theme.colors.gray[700]} />
+                  <Text
+                    fontSize={["xx-small", "xs"]}
+                    fontFamily={"sans-serif"}
+                    fontWeight={"bold"}
+                    color={"gray.700"}
+                  >
+                    {contract.reviews[0].score}
+                  </Text>
+                </>
+              )}
+            </Flex>
+            <Flex flexDir={"row"} alignItems={"center"}>
+              <MdMessage color={theme.colors.gray[700]} />
+              <Text
+                fontSize={["xx-small", "xs"]}
+                fontFamily={"sans-serif"}
+                fontWeight={"bold"}
+                color={"gray.700"}
+              >
+                {contract.messages.length}
+              </Text>
+            </Flex>
+          </Flex>
+        </Flex>
         <Box>
-          <FiExternalLink size={24} color="#FFFFFF" />
+          <Link as={NextLink} href={`/contracts/${contract.id}`}>
+            <FiExternalLink
+              size={20}
+              color={theme.colors.gray[800]}
+              fontWeight={"bold"}
+            />
+          </Link>
         </Box>
       </Flex>
-
-      <Text> Status: {contractStatus}</Text>
     </Box>
   );
+
+  //RiToolsFill
+  //TbCalendarCheck
+  //TbCalendar
+  //PiToolboxBold
 }
