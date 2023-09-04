@@ -45,7 +45,7 @@ export default function Contracts() {
         <Flex alignItems="center" justifyContent="space-between" my="4">
           <AppLogo size="sm" />
         </Flex>
-        <Heading>This is the contracts list page</Heading>
+        <Heading>Contratos</Heading>
         {isLoading ? (
           <Spinner />
         ) : (

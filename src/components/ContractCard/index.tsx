@@ -33,11 +33,12 @@ export default function ContractCard({ contract }: ContractCardProps) {
             fontWeight={"bold"}
             color={"white"}
             bg={contract.contractorAgreed ? "green.600" : "gray.700"}
+            noOfLines={1}
           >
             {contract.service.title}
           </Text>
           <Flex justifyContent={"space-between"} mt="1.5">
-            <Flex flexDir={"row"} alignItems={"center"}>
+            <Flex flexDir={"row"} alignItems={"center"} w="50%">
               <Text
                 fontSize={["xx-small", "xs"]}
                 fontFamily={"sans-serif"}
@@ -48,60 +49,66 @@ export default function ContractCard({ contract }: ContractCardProps) {
                 {contract.userContractor.name}
               </Text>
             </Flex>
-            <Flex flexDir={"row"} alignItems={"center"}>
-              <TbCalendar color={theme.colors.gray[700]} />
-              <Text
-                fontSize={["xx-small", "xs"]}
-                fontFamily={"sans-serif"}
-                fontWeight={"bold"}
-                color={"gray.700"}
-              >
-                {format(new Date(contract.createDate), "dd/MM/yyyy")}
-              </Text>
-            </Flex>
-            <Flex flexDir={"row"} alignItems={"center"} w={"33%"}>
-              <RiToolsFill color={theme.colors.gray[700]} />
-              <Text
-                fontSize={["xx-small", "xs"]}
-                fontFamily={"sans-serif"}
-                fontWeight={"bold"}
-                color={"gray.700"}
-              >
-                {contract.dueDate
-                  ? format(new Date(contract.dueDate!), "dd/MM/yyyy")
-                  : `--/--/---`}
-              </Text>
-            </Flex>
-            <Flex flexDir={"row"} alignItems={"center"}>
-              {contract.serviceProvided && (
-                <MdFileDownloadDone color={theme.colors.gray[700]} />
-              )}
-            </Flex>
-            <Flex flexDir={"row"} alignItems={"center"}>
-              {contract.serviceReviewed && (
-                <>
-                  <MdStar color={theme.colors.gray[700]} />
-                  <Text
-                    fontSize={["xx-small", "xs"]}
-                    fontFamily={"sans-serif"}
-                    fontWeight={"bold"}
-                    color={"gray.700"}
-                  >
-                    {contract.reviews[0].score}
-                  </Text>
-                </>
-              )}
-            </Flex>
-            <Flex flexDir={"row"} alignItems={"center"}>
-              <MdMessage color={theme.colors.gray[700]} />
-              <Text
-                fontSize={["xx-small", "xs"]}
-                fontFamily={"sans-serif"}
-                fontWeight={"bold"}
-                color={"gray.700"}
-              >
-                {contract.messages.length}
-              </Text>
+            <Flex
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              w="100%"
+            >
+              <Flex flexDir={"row"} alignItems={"center"}>
+                <TbCalendar color={theme.colors.gray[700]} />
+                <Text
+                  fontSize={["xx-small", "xs"]}
+                  fontFamily={"sans-serif"}
+                  fontWeight={"bold"}
+                  color={"gray.700"}
+                >
+                  {format(new Date(contract.createDate), "dd/MM/yyyy")}
+                </Text>
+              </Flex>
+              <Flex flexDir={"row"} alignItems={"center"}>
+                <RiToolsFill color={theme.colors.gray[700]} />
+                <Text
+                  fontSize={["xx-small", "xs"]}
+                  fontFamily={"sans-serif"}
+                  fontWeight={"bold"}
+                  color={"gray.700"}
+                >
+                  {contract.dueDate
+                    ? format(new Date(contract.dueDate!), "dd/MM/yyyy")
+                    : `--/--/---`}
+                </Text>
+              </Flex>
+              <Flex flexDir={"row"} alignItems={"center"}>
+                {contract.serviceProvided && (
+                  <MdFileDownloadDone color={theme.colors.gray[700]} />
+                )}
+              </Flex>
+              <Flex flexDir={"row"} alignItems={"center"}>
+                {contract.serviceReviewed && (
+                  <>
+                    <MdStar color={theme.colors.gray[700]} />
+                    <Text
+                      fontSize={["xx-small", "xs"]}
+                      fontFamily={"sans-serif"}
+                      fontWeight={"bold"}
+                      color={"gray.700"}
+                    >
+                      {contract.reviews[0].score}
+                    </Text>
+                  </>
+                )}
+              </Flex>
+              <Flex flexDir={"row"} alignItems={"center"}>
+                <MdMessage color={theme.colors.gray[700]} />
+                <Text
+                  fontSize={["xx-small", "xs"]}
+                  fontFamily={"sans-serif"}
+                  fontWeight={"bold"}
+                  color={"gray.700"}
+                >
+                  {contract.messages.length}
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
