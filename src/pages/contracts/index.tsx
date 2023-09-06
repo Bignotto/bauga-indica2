@@ -36,7 +36,7 @@ export default function Contracts() {
     }
     if (status === "unauthenticated") router.push("/");
     if (status === "authenticated") loadContracts();
-  }, [router, status]);
+  }, [router, session?.userId, sessionLoading, status]);
 
   return (
     <Stack alignItems={"center"}>
@@ -45,13 +45,13 @@ export default function Contracts() {
         <Flex alignItems="center" justifyContent="space-between" my="4">
           <AppLogo size="sm" />
         </Flex>
-        <Heading>Contratos</Heading>
+        <Heading>Serviços prestados</Heading>
         {isLoading ? (
           <Spinner />
         ) : (
           contracts?.map((contract) => (
             <Flex key={contract.id} mt="2">
-              <ContractCard contract={contract} />
+              <ContractCard contract={contract} mode="contractor" />
             </Flex>
           ))
         )}

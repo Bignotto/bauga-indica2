@@ -16,7 +16,7 @@ export default function Providers() {
   const [contracts, setContracts] = useState<
     (Contract & {
       service: Service;
-      userContractor: User;
+      userProvider: User;
       messages: Message[];
       reviews: Review[];
     })[]
@@ -38,7 +38,6 @@ export default function Providers() {
     if (status === "authenticated") loadContracts();
   }, [router, session?.userId, sessionLoading, status]);
 
-  //NEXT: fix contract lis to show contractor image instead of contractor when listing providers
   return (
     <Stack alignItems={"center"}>
       <Flex p={"4"} flexDir={"column"} w={["100%", 500]}>
@@ -46,13 +45,13 @@ export default function Providers() {
         <Flex alignItems="center" justifyContent="space-between" my="4">
           <AppLogo size="sm" />
         </Flex>
-        <Heading>Contratos</Heading>
+        <Heading>Serviços contratados</Heading>
         {isLoading ? (
           <Spinner />
         ) : (
           contracts?.map((contract) => (
             <Flex key={contract.id} mt="2">
-              <ContractCard contract={contract} />
+              <ContractCard contract={contract} mode="provider" />
             </Flex>
           ))
         )}

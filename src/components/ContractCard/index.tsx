@@ -8,21 +8,31 @@ import { RiToolsFill } from "react-icons/ri";
 import { TbCalendar } from "react-icons/tb";
 
 type ContractCardProps = {
+  mode: "provider" | "contractor";
   contract: Contract & {
     service: Service;
-    userContractor: User;
+    userContractor?: User;
+    userProvider?: User;
     messages: Message[];
     reviews: Review[];
   };
 };
 
-export default function ContractCard({ contract }: ContractCardProps) {
+export default function ContractCard({ contract, mode }: ContractCardProps) {
   return (
     <Box bg="gray.200" w={"100%"} p="1">
       <Flex flexDirection={"row"}>
         <Avatar
-          name={`${contract.userContractor.name}`}
-          src={`${contract.userContractor.image}`}
+          name={
+            mode === "contractor"
+              ? `${contract.userContractor?.name}`
+              : `${contract.userProvider?.name}`
+          }
+          src={
+            mode === "contractor"
+              ? `${contract.userContractor?.image}`
+              : `${contract.userProvider?.image}`
+          }
           bg="teal.500"
           size={"md"}
         />
@@ -46,7 +56,9 @@ export default function ContractCard({ contract }: ContractCardProps) {
                 color={"gray.700"}
                 noOfLines={1}
               >
-                {contract.userContractor.name}
+                {mode === "contractor"
+                  ? `${contract.userContractor?.name}`
+                  : `${contract.userProvider?.name}`}
               </Text>
             </Flex>
             <Flex

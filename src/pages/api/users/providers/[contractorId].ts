@@ -16,7 +16,7 @@ export default async function handler(
       },
       include: {
         service: true,
-        userContractor: true,
+        userProvider: true,
         messages: true,
         reviews: true,
       },
