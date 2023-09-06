@@ -307,7 +307,7 @@ export default function ContractMessages() {
               ) : (
                 contract?.reviews?.map((r) => (
                   <>
-                    <Box bg="yellow.200" mt="4">
+                    <Box bg="yellow.200" mt="4" key={r.id}>
                       <Text>{r.title}</Text>
                       <Text>{r.text}</Text>
                     </Box>

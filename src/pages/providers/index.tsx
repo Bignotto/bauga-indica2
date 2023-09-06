@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/AuthContext";
 
-export default function Contracts() {
+export default function Providers() {
   const router = useRouter();
   const { status, session, sessionLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +16,7 @@ export default function Contracts() {
   const [contracts, setContracts] = useState<
     (Contract & {
       service: Service;
-      userContractor: User;
+      userProvider: User;
       messages: Message[];
       reviews: Review[];
     })[]
@@ -26,7 +26,7 @@ export default function Contracts() {
     async function loadContracts() {
       if (sessionLoading) return;
       try {
-        const response = await api.get(`users/contracts/${session?.userId}`);
+        const response = await api.get(`users/providers/${session?.userId}`);
         setContracts(response.data);
       } catch (error) {
         console.log({ error });
@@ -45,13 +45,13 @@ export default function Contracts() {
         <Flex alignItems="center" justifyContent="space-between" my="4">
           <AppLogo size="sm" />
         </Flex>
-        <Heading>Serviços prestados</Heading>
+        <Heading>Serviços contratados</Heading>
         {isLoading ? (
           <Spinner />
         ) : (
           contracts?.map((contract) => (
             <Flex key={contract.id} mt="2">
-              <ContractCard contract={contract} mode="contractor" />
+              <ContractCard contract={contract} mode="provider" />
             </Flex>
           ))
         )}
