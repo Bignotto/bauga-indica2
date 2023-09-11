@@ -1,13 +1,7 @@
-import { api } from "@/services/api";
+import { supabase } from "@/services/supabase";
 import { Account, User } from "@prisma/client";
-import { signIn, signOut, useSession } from "next-auth/react";
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { signOut } from "next-auth/react";
+import { ReactNode, createContext, useContext, useState } from "react";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -26,6 +20,7 @@ type SessionUser = {
 type AuthContextData = {
   appSignIn(): Promise<void>;
   appSignOut(): Promise<void>;
+  supabaseSignIn(): Promise<void>;
   status: "authenticated" | "loading" | "unauthenticated";
   session: SessionUser | undefined;
   sessionLoading: boolean;
@@ -34,7 +29,7 @@ type AuthContextData = {
 const AuthContext = createContext({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
 
   const [sessionStatus, setSessionStatus] = useState<
     "authenticated" | "loading" | "unauthenticated"
@@ -48,33 +43,42 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   >();
 
-  useEffect(() => {
-    async function loadUserProfile() {
-      setIsLoading(true);
-      try {
-        const response = await api.get(`users/${session?.user?.email}`);
-        setUserProfile(response.data);
-        console.log("AuthHook: loaded user profile");
-      } catch (error) {
-        console.log({ error });
-      } finally {
-        setIsLoading(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function loadUserProfile() {
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await api.get(`users/${session?.user?.email}`);
+  //       setUserProfile(response.data);
+  //       console.log("AuthHook: loaded user profile");
+  //     } catch (error) {
+  //       console.log({ error });
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }
 
-    if (status === "authenticated") loadUserProfile();
-  }, [status, session?.user?.email]);
+  //   if (status === "authenticated") loadUserProfile();
+  // }, [status, session?.user?.email]);
 
   async function appSignIn() {
-    try {
-      await signIn();
+    // try {
+    //   await signIn();
+    //   if (status === "authenticated") {
+    //     setSessionStatus(status);
+    //   }
+    // } catch (error) {
+    //   console.log({ error });
+    // }
+  }
 
-      if (status === "authenticated") {
-        setSessionStatus(status);
-      }
-    } catch (error) {
-      console.log({ error });
-    }
+  async function supabaseSignIn() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+
+    if (error) console.log({ errorFromSupabase: error });
+
+    setSessionStatus("authenticated");
   }
 
   async function appSignOut() {
@@ -88,9 +92,10 @@ function AuthProvider({ children }: AuthProviderProps) {
   return (
     <AuthContext.Provider
       value={{
+        supabaseSignIn,
         appSignIn,
         appSignOut,
-        status,
+        status: sessionStatus,
         sessionLoading: isLoading,
         session: {
           email: userProfile?.email ?? "",

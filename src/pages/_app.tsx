@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { SessionProvider } from "next-auth/react";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { AppProps } from "next/app";
 import { Roboto_Slab } from "next/font/google";
 import { AuthProvider } from "../hooks/AuthContext";
@@ -19,13 +19,13 @@ export default function App({ Component, pageProps }: AppProps) {
           }
         `}
       </style>
-      <SessionProvider session={pageProps.session}>
+      <ClerkProvider {...pageProps}>
         <AuthProvider>
           <ChakraProvider theme={theme}>
             <Component {...pageProps} />
           </ChakraProvider>
         </AuthProvider>
-      </SessionProvider>
+      </ClerkProvider>
     </>
   );
 }

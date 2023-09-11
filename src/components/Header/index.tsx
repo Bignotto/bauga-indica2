@@ -8,6 +8,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
+import { SignIn } from "@clerk/nextjs";
 import NextLink from "next/link";
 import { FormEvent } from "react";
 import { LuHardHat } from "react-icons/lu";
@@ -17,7 +18,7 @@ import { useAuth } from "../../hooks/AuthContext";
 
 export default function Header() {
   // const { data: session, status } = useSession();
-  const { session, appSignIn, appSignOut, status } = useAuth();
+  const { session, appSignIn, appSignOut, status, supabaseSignIn } = useAuth();
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
@@ -27,6 +28,14 @@ export default function Header() {
     } catch (error) {
       console.log({ error });
     }
+  }
+
+  async function handleLoginSupabase(event: FormEvent) {
+    event.preventDefault();
+
+    try {
+      await supabaseSignIn();
+    } catch (error) {}
   }
 
   if (status === "loading")
@@ -75,12 +84,16 @@ export default function Header() {
     );
   }
   return (
-    <Flex w="100%" h="16" alignItems="center" justifyContent="space-between">
-      <Avatar name={""} src={""} />
-      <Text>Entre com sua conta do Google</Text>
-      <Button onClick={handleLogin} colorScheme="blue">
-        Login
-      </Button>
-    </Flex>
+    <SignIn />
+    // <Flex w="100%" h="16" alignItems="center" justifyContent="space-between">
+    //   <Avatar name={""} src={""} />
+    //   <Text>Entre com sua conta do Google</Text>
+    //   <Button onClick={handleLogin} colorScheme="blue">
+    //     Login
+    //   </Button>
+    //   <Button onClick={handleLoginSupabase} colorScheme="blue">
+    //     Supabase
+    //   </Button>
+    // </Flex>
   );
 }
