@@ -18,7 +18,7 @@ import { useAuth } from "../../hooks/AuthContext";
 
 export default function Header() {
   // const { data: session, status } = useSession();
-  const { session, appSignIn, appSignOut, status, supabaseSignIn } = useAuth();
+  const { session, appSignIn, appSignOut, status } = useAuth();
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
@@ -28,14 +28,6 @@ export default function Header() {
     } catch (error) {
       console.log({ error });
     }
-  }
-
-  async function handleLoginSupabase(event: FormEvent) {
-    event.preventDefault();
-
-    try {
-      await supabaseSignIn();
-    } catch (error) {}
   }
 
   if (status === "loading")

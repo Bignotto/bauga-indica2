@@ -1,7 +1,13 @@
-import { supabase } from "@/services/supabase";
+import { useAuth as useClerkAuth, useUser } from "@clerk/nextjs";
 import { Account, User } from "@prisma/client";
 import { signOut } from "next-auth/react";
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -20,7 +26,6 @@ type SessionUser = {
 type AuthContextData = {
   appSignIn(): Promise<void>;
   appSignOut(): Promise<void>;
-  supabaseSignIn(): Promise<void>;
   status: "authenticated" | "loading" | "unauthenticated";
   session: SessionUser | undefined;
   sessionLoading: boolean;
@@ -30,6 +35,8 @@ const AuthContext = createContext({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
   // const { data: session, status } = useSession();
+  const { isLoaded, userId, sessionId } = useClerkAuth();
+  const { user } = useUser();
 
   const [sessionStatus, setSessionStatus] = useState<
     "authenticated" | "loading" | "unauthenticated"
@@ -42,6 +49,15 @@ function AuthProvider({ children }: AuthProviderProps) {
       accounts: Account[];
     }
   >();
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    console.log({
+      userId,
+      sessionId,
+      EMAIL: user?.primaryEmailAddress?.emailAddress,
+    });
+  }, [isLoaded, sessionId, userId]);
 
   // useEffect(() => {
   //   async function loadUserProfile() {
@@ -71,15 +87,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     // }
   }
 
-  async function supabaseSignIn() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-
-    if (error) console.log({ errorFromSupabase: error });
-
-    setSessionStatus("authenticated");
-  }
+  async function supabaseSignIn() {}
 
   async function appSignOut() {
     try {
@@ -92,7 +100,6 @@ function AuthProvider({ children }: AuthProviderProps) {
   return (
     <AuthContext.Provider
       value={{
-        supabaseSignIn,
         appSignIn,
         appSignOut,
         status: sessionStatus,
