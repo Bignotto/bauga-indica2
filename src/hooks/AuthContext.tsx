@@ -1,6 +1,6 @@
+import { api } from "@/services/api";
 import { useAuth as useClerkAuth, useUser } from "@clerk/nextjs";
 import { Account, User } from "@prisma/client";
-import { signOut } from "next-auth/react";
 import {
   ReactNode,
   createContext,
@@ -34,7 +34,6 @@ type AuthContextData = {
 const AuthContext = createContext({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
-  // const { data: session, status } = useSession();
   const { isLoaded, userId, sessionId } = useClerkAuth();
   const { user } = useUser();
 
@@ -51,30 +50,24 @@ function AuthProvider({ children }: AuthProviderProps) {
   >();
 
   useEffect(() => {
-    if (!isLoaded) return;
-    console.log({
-      userId,
-      sessionId,
-      EMAIL: user?.primaryEmailAddress?.emailAddress,
-    });
-  }, [isLoaded, sessionId, userId]);
-
-  // useEffect(() => {
-  //   async function loadUserProfile() {
-  //     setIsLoading(true);
-  //     try {
-  //       const response = await api.get(`users/${session?.user?.email}`);
-  //       setUserProfile(response.data);
-  //       console.log("AuthHook: loaded user profile");
-  //     } catch (error) {
-  //       console.log({ error });
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-
-  //   if (status === "authenticated") loadUserProfile();
-  // }, [status, session?.user?.email]);
+    async function loadUserProfile() {
+      setIsLoading(true);
+      try {
+        const response = await api.get(
+          `users/${user?.primaryEmailAddress?.emailAddress}`
+        );
+        setUserProfile(response.data);
+        setSessionStatus("authenticated");
+        console.log("AuthHook: loaded user profile");
+      } catch (error) {
+        console.log({ error });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    setIsLoading(isLoaded);
+    if (sessionId) loadUserProfile();
+  }, [sessionId, user?.primaryEmailAddress?.emailAddress]);
 
   async function appSignIn() {
     // try {
@@ -87,14 +80,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     // }
   }
 
-  async function supabaseSignIn() {}
-
   async function appSignOut() {
-    try {
-      await signOut();
-    } catch (error) {
-      console.log({ error });
-    }
+    setSessionStatus("unauthenticated");
   }
 
   return (

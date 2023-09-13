@@ -8,7 +8,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import { SignIn } from "@clerk/nextjs";
+import { SignIn, SignOutButton } from "@clerk/nextjs";
 import NextLink from "next/link";
 import { FormEvent } from "react";
 import { LuHardHat } from "react-icons/lu";
@@ -68,9 +68,11 @@ export default function Header() {
           <Link as={NextLink} href="/providers" _hover={{ bg: "#e6e6e6" }}>
             <LuHardHat size={24} />
           </Link>
-          <Button onClick={() => appSignOut()} variant={"ghost"}>
-            <RiLogoutBoxRLine size={24} color="#2C5282" />
-          </Button>
+          <SignOutButton signOutCallback={appSignOut}>
+            <Button variant={"ghost"}>
+              <RiLogoutBoxRLine size={24} color="#2C5282" />
+            </Button>
+          </SignOutButton>
         </HStack>
       </Flex>
     );

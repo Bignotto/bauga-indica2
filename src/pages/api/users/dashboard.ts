@@ -1,7 +1,7 @@
 import { prisma } from "@/database/prisma";
+import { clerkClient } from "@clerk/nextjs";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
 
 export type DashboardProps = {
   servicesCount: number;
@@ -13,12 +13,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<DashboardProps | null>
 ) {
-  const session = await getServerSession(req, res, authOptions);
-  if (!session) res.status(403).end();
+  const { userId } = getAuth(req);
+  if (!userId) {
+    return res.status(401).end();
+  }
+  const clerkUser = userId ? await clerkClient.users.getUser(userId) : null;
 
   const user = await prisma.user.findUnique({
     where: {
-      email: `${session?.user?.email}`,
+      email: `${clerkUser?.emailAddresses[0].emailAddress}`,
     },
     include: {
       services: true,
