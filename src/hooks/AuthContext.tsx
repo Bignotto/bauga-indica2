@@ -67,7 +67,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
     setIsLoading(isLoaded);
     if (sessionId) loadUserProfile();
-  }, [sessionId, user?.primaryEmailAddress?.emailAddress]);
+  }, [isLoaded, sessionId, user?.primaryEmailAddress?.emailAddress]);
 
   async function appSignIn() {
     // try {
