@@ -36,74 +36,74 @@ async function main() {
 
   const newUsersArray = [
     {
+      id: "cuV5nQchWf3QP2EzNyq2Gu",
       name: "Alice",
       email: "alice@example.com",
       phone: "1555-1234",
       userType: "user",
-      password: "asdfgh",
     },
     {
+      id: "hfpoHuNTrLBWjkTGjKJTrT",
       name: "Roberto",
       email: "Roberto@example.com",
       phone: "2555-5677",
       userType: "user",
-      password: "123456",
     },
     {
+      id: "6xdquNTeybenMJUz87twUT",
       name: "Carlos",
       email: "Carlos@example.com",
       phone: "3555-9012",
       userType: "user",
-      password: "asdfgh",
     },
     {
+      id: "f1QRdzi1vUScTqaefd6MpS",
       name: "David",
       email: "david@example.com",
       phone: "4555-3456",
       userType: "user",
-      password: "123456",
     },
     {
+      id: "52NryaWxuNWHfcGLtDWdmy",
       name: "Eva",
       email: "Eva@example.com",
       phone: "5555-7890",
       userType: "user",
-      password: "asdfgh",
     },
     {
+      id: "gLm97oqLAKndL9QBbmzW9E",
       name: "Amâncio",
       email: "Amâncio@example.com",
       phone: "6555-1234",
       userType: "user",
-      password: "123456",
     },
     {
+      id: "phFyVMCTtvLmYvPc1fSAic",
       name: "Fernanda",
       email: "fernanda@example.com",
       phone: "7555-5678",
       userType: "user",
-      password: "asdfgh",
     },
     {
+      id: "stZHpL5G8KBM4gh2bpiiDF",
       name: "Suelen",
       email: "Suelen@example.com",
       phone: "8555-9012",
       userType: "user",
-      password: "123456",
     },
     {
+      id: "8DBvMt5RoVx2FDGM9r5cUw",
       name: "Ivan",
       email: "ivan@example.com",
       phone: "9555-3456",
       userType: "user",
-      password: "asdfgh",
     },
     {
+      id: "umkPgRpEWUaXM1juRMKJLT",
       name: "Admin",
       email: "admin@example.com",
       phone: "0555-7890",
       userType: "admin",
-      password: "zyb460",
     },
   ];
 
@@ -116,8 +116,9 @@ async function main() {
 
   const newServices = [
     {
-      title: "Home Cleaning",
-      description: "Professional home cleaning service",
+      title: "Faxina Doméstica",
+      description:
+        "Limpo sua casa e deixo ela brilhando. Lavo quintal. Não passo roupa.",
       value: 100,
       serviceTypeId: dbServices[Math.floor(Math.random() * 7) + 1].id,
       providerId: dbUsers[Math.floor(Math.random() * 9) + 1].id,
@@ -126,8 +127,9 @@ async function main() {
       serviceClass: "A",
     },
     {
-      title: "Office Cleaning",
-      description: "Professional office cleaning service",
+      title: "Faxina Escritório",
+      description:
+        "Limpeza profissional de escritórios, estúdios, barbearias, salões de beleza e consultórios. Consulte para um orçamento. Com nota fiscal!",
       value: 200,
       serviceTypeId: dbServices[Math.floor(Math.random() * 7) + 1].id,
       providerId: dbUsers[Math.floor(Math.random() * 9) + 1].id,
@@ -136,8 +138,9 @@ async function main() {
       serviceClass: "A",
     },
     {
-      title: "Lawn Mowing",
-      description: "Residential lawn mowing service",
+      title: "Jardinagem Residencial",
+      description:
+        "Limpeza de jardins, paisagismo e hortas domésticas. Serviço limpo e rápido.",
       value: 50,
       serviceTypeId: dbServices[0].id,
       providerId: dbUsers[Math.floor(Math.random() * 9) + 1].id,
@@ -146,8 +149,9 @@ async function main() {
       serviceClass: "A",
     },
     {
-      title: "Landscaping Design",
-      description: "Custom landscaping design for your property",
+      title: "Paisagismo Residencial",
+      description:
+        "Projetos de paisagismo para sua casa ou sua empresa. Projetos simples e de fácil execução.",
       value: 500,
       serviceTypeId: dbServices[Math.floor(Math.random() * 7) + 1].id,
       providerId: dbUsers[Math.floor(Math.random() * 9) + 1].id,
@@ -156,8 +160,9 @@ async function main() {
       serviceClass: "A",
     },
     {
-      title: "Kitchen Sink Repair",
-      description: "Expert kitchen sink repair service",
+      title: "Marido de Aluguel",
+      description:
+        "Encanamentos, tomadas, pequenos reparos. Não deixo sua torneira pingando nem sua tomada pipocando!",
       value: 75,
       serviceTypeId: dbServices[Math.floor(Math.random() * 7) + 1].id,
       providerId: dbUsers[Math.floor(Math.random() * 9) + 1].id,
